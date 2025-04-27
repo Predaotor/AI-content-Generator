@@ -3,7 +3,7 @@ import { VerticalFeatureRow } from '../feature/VerticalFeatureRow';
 import { Section } from '../layout/Section';
 
 const VerticalFeatures = () => (
-  <Background color="bg-indigo-800">
+  <Background color="bg-indigo-800" smoothScroll>
     <Section
       title="How Our AI Content Generator Helps You"
       description="Stop wasting hours writing. Let AI do the hard work while you focus on what matters."

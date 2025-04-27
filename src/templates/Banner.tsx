@@ -6,7 +6,7 @@ import { CTABanner } from '../cta/CTABanner';
 import { Section } from '../layout/Section';
 
 const Banner = () => (
-  <Background color="bg-indigo-600">
+  <Background color="bg-indigo-600" smoothScroll>
     <Section>
       <CTABanner
         title=" Start generating high-quality content for blogs, emails, ads, and more. Save time and boost productivity!"
