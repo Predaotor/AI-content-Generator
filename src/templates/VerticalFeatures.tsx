@@ -1,31 +1,34 @@
+import { Background } from '../background/Background';
 import { VerticalFeatureRow } from '../feature/VerticalFeatureRow';
 import { Section } from '../layout/Section';
 
 const VerticalFeatures = () => (
-  <Section
-    title="Your title here"
-    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus malesuada nisi tellus, non imperdiet nisi tempor at."
-  >
-    <VerticalFeatureRow
-      title="Your title here"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
-      image="/assets/images/feature.svg"
-      imageAlt="First feature alt text"
-    />
-    <VerticalFeatureRow
-      title="Your title here"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
-      image="/assets/images/feature2.svg"
-      imageAlt="Second feature alt text"
-      reverse
-    />
-    <VerticalFeatureRow
-      title="Your title here"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
-      image="/assets/images/feature3.svg"
-      imageAlt="Third feature alt text"
-    />
-  </Section>
+  <Background color="bg-indigo-800">
+    <Section
+      title="How Our AI Content Generator Helps You"
+      description="Stop wasting hours writing. Let AI do the hard work while you focus on what matters."
+    >
+      <VerticalFeatureRow
+        title="Write Blog Posts in Seconds"
+        description="Input a topic and generate a full SEO-optimized blog post instantly. Save time, grow traffic."
+        image="/assets/images/feature.svg"
+        imageAlt="Blog writing feature"
+      />
+      <VerticalFeatureRow
+        title="Generate Product Descriptions Easily"
+        description="Turn boring product specs into captivating product descriptions that sell more."
+        image="/assets/images/feature2.svg"
+        imageAlt="Product description feature"
+        reverse
+      />
+      <VerticalFeatureRow
+        title="Emails, Ads, Captions – All Done"
+        description="Whether it's emails, Facebook ads, or Instagram captions, create it fast with just a few clicks."
+        image="/assets/images/feature3.svg"
+        imageAlt="Marketing content feature"
+      />
+    </Section>
+  </Background>
 );
 
 export { VerticalFeatures };
