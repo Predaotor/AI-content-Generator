@@ -1,38 +1,40 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+frontend-AI/node_modules
+frontend-AI/.pnp
+frontend-AI/.pnp.js
+
 
 # testing
-/coverage
+frontend-AI/coverage
 
 # next.js
-/.next
-/out
+frontend-AI/.next
+
+frontend-AI/out
 
 # production
-/build
+frontend-AI/build
 
 # misc
-.DS_Store
+frontend-AI/public/static.DS_Store
 *.pem
 Thumbs.db
 
 # debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+frontend-AI/npm-debug.log*
+frontend-AI/yarn-debug.log*
+frontend-AI/yarn-error.log*
 
 # dotenv local files
-.env*.local
+frontend-AI/.env*.local
 
 # local folder
-local
+frontend-AI/local
 
 # vercel
-.vercel
+frontend-AI/.vercel
 
 backend-AI/.env 
 venv

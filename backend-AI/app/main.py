@@ -3,8 +3,26 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordBearer
 import auth, crud, database, models, schemas
+from fastapi.middleware.cors import CORSMiddleware
 
 app=FastAPI() 
+
+
+# Allow frontend (e.g, running on http://localhost:3000)
+origins=[ 
+        "http://localhost:3000", # REACT/Next.js dev server 
+         ]
+
+
+#apply CORS settings 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins, # allow requests from this origin 
+    allow_credentials=True,
+    allow_methods=["*"],  # allow all HTTP methods 
+    allow_headers=["*"],  # allow all headers 
+)
+
 
 # OAuth2PasswordBearer is used to extract the token from requests
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
