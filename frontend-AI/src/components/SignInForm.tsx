@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useAuth } from '../context/AuthContext';  // Import the auth context
 import Link from 'next/link';
 import { loginUser } from '../utils/api';
 
@@ -10,6 +12,8 @@ const SignInForm = () => {
   });
 
   const [message, setMessage] = useState('');
+  const router = useRouter();
+  const { login } = useAuth();  // Get the login function from context
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,9 +22,13 @@ const SignInForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await loginUser(formData);
-      setMessage('Login successful!');
-      console.log(res); // Optionally save token and redirect
+      const user = await loginUser(formData);  // Assuming the response contains user info
+      login(user);  // Save user data in context and localStorage      
+
+      setMessage('Login successful! Redirecting...');
+      setTimeout(() => {
+        router.push('/');  // Redirect to main page
+      }, 1500);
     } catch (err: any) {
       setMessage(err.message || 'Login failed');
     }
@@ -31,10 +39,9 @@ const SignInForm = () => {
       <h2 className="text-center text-2xl font-bold text-indigo-600">Sign In</h2>
 
       <form onSubmit={handleSubmit}>
-        {/* Email */}
         <div className="mt-4">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email (or leave blank if using username)
+            Email
           </label>
           <input
             type="email"
@@ -47,23 +54,6 @@ const SignInForm = () => {
           />
         </div>
 
-        {/* Username */}
-        <div className="mt-4">
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-            Username (or leave blank if using email)
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Enter your username"
-            className="mt-2 w-full rounded-md border border-gray-300 p-3"
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* Password */}
         <div className="mt-4">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
             Password
@@ -80,7 +70,6 @@ const SignInForm = () => {
           />
         </div>
 
-        {/* Submit */}
         <div className="mt-6">
           <button type="submit" className="w-full rounded-md bg-indigo-600 py-3 text-white">
             Sign In
@@ -90,7 +79,6 @@ const SignInForm = () => {
 
       {message && <p className="mt-4 text-center text-sm text-red-600">{message}</p>}
 
-      {/* Link to signup */}
       <div className="mt-4 text-center">
         <p>Don&apos;t have an account?{' '}
           <Link href="/signup">

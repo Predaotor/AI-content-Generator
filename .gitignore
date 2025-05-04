@@ -37,4 +37,4 @@ frontend-AI/local
 frontend-AI/.vercel
 
 backend-AI/.env 
-venv
+backend-AI/venv

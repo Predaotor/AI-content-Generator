@@ -23,5 +23,9 @@ export async function loginUser(data: { username?: string, email?: string, passw
     if (!res.ok){
         throw new Error('Login failed');
     }
-    return res.json();
-    }
+    
+    
+    
+    const responseData = await res.json();  // Get the response data
+    return responseData;  // Return the response data to AuthContext
+  }

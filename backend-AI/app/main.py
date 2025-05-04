@@ -53,24 +53,26 @@ async def register(user: schemas.UserCreate, db: Session = Depends(auth.get_db))
 
 @app.post("/login")
 async def login(user: schemas.UserLogin, db: Session = Depends(auth.get_db)):
-    # First check if the user exists by email
     db_user = crud.get_user_by_email(db, email=user.email)
 
     if not db_user:
-        # If email is not found, try fetching the user by username
         db_user = crud.get_user_by_username(db, username=user.username)
 
-    # If user doesn't exist or password is incorrect, raise an error
     if not db_user or not auth.verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect email/username or password")
 
-    # Create JWT token for the logged-in user
     access_token_expires = timedelta(minutes=30)
     access_token = auth.create_access_token(
         data={"sub": db_user.email}, expires_delta=access_token_expires
     )
-    
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    # ✅ Return username from the database, not the incoming request
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "username": db_user.username
+    }
+
 
 
 @app.get("/protected")
