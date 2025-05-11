@@ -1,5 +1,8 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useAuth } from '../context/AuthContext';  // Import the custom hook for auth context
+import { useAuth } from '../context/AuthContext';
+import { fetchAIResponse } from '../utils/api';
 
 import { Background } from '../background/Background';
 import { Button } from '../button/Button';
@@ -8,10 +11,21 @@ import { Section } from '../layout/Section';
 import { NavbarTwoColumns } from '../navigation/NavbarTwoColumns';
 import { Logo } from './Logo';
 
-
 const Hero = () => {
-  const { user, logout } = useAuth();  // Get user data and logout function from context
-  
+  const { user, logout } = useAuth();
+  const router = useRouter();
+  const [aiText, setAiText] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleStartTrial = async () => {
+    if (!user) {
+      router.push('/signin');
+      return;
+    } else {
+      router.push('/ai');
+    }
+  };
+
   return (
     <Background color="bg-indigo-500" smoothScroll>
       <Section yPadding="py-6">
@@ -20,17 +34,15 @@ const Hero = () => {
             <Link href="https://github.com/your-repo">GitHub</Link>
           </li>
           {user ? (
-            // Show username and logout button when user is logged in
             <>
               <li className="text-black">
-                <Link href='/profile'>{user.username}</Link>
-                </li>
+                <Link href="/profile">{user.username}</Link>
+              </li>
               <li>
                 <button onClick={logout} className="text-gray">Log Out</button>
               </li>
             </>
           ) : (
-            // Show Sign In and Sign Up when user is not logged in
             <>
               <li>
                 <Link href="/signin">Log in</Link>
@@ -59,11 +71,18 @@ const Hero = () => {
             </span>
           }
           button={
-            <Link href="/signup">
-              <Button xl>Start Your Free Trial</Button>
-            </Link>
+            <button onClick={handleStartTrial}>
+              <Button xl>{loading ? 'Generating...' : 'Start Your Free Trial'}</Button>
+            </button>
           }
         />
+
+        {aiText && (
+          <div className="mt-10 bg-white p-6 rounded-xl shadow-md max-w-2xl mx-auto">
+            <h2 className="text-xl font-semibold mb-2 text-indigo-700">AI Generated Output</h2>
+            <p className="text-gray-800 whitespace-pre-wrap">{aiText}</p>
+          </div>
+        )}
       </Section>
     </Background>
   );

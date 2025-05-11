@@ -1,11 +1,16 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session 
+from schemas import TemplateRequest
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordBearer
 import auth, crud, database, models, schemas
 from fastapi.middleware.cors import CORSMiddleware
+from openai_api import generate_text_template, generate_image_template
 
 app=FastAPI() 
+
+
+
 
 
 # Allow frontend (e.g, running on http://localhost:3000)
@@ -27,6 +32,36 @@ app.add_middleware(
 # OAuth2PasswordBearer is used to extract the token from requests
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+
+# Manage openAI apis 
+@app.post("/generate-template")
+async def generate_template(request: TemplateRequest):
+  
+  
+  try: 
+    # call openAI's text generation API 
+    if request.template_type in ["blog_post", "emil_draft"]:
+      
+      generated_template=generate_text_template(request.template_type,request.details)
+      return {"generated_template":generated_template}
+    
+    else:
+      raise HTTPException(status_code=400, detail="Unsupported template type")
+  
+  except Exception as e:
+    raise HTTPException(status_code=500, detail=f"Error generating template: {str(e)}")
+  
+
+@app.post("/generate-image-template")
+async def generate_image_template_route(prompt: str):
+  
+  try :
+    # Call OpenAI's image generation API (DALLE)
+    image_url=generate_image_template(prompt)
+    return {"image_url":image_url}
+  
+  except Exception as e:
+    raise HTTPException(status_code=500, detail=f"Error generating image {str(e)}")
 
 # Create api routes 
 @app.post("/register")
@@ -88,3 +123,8 @@ async def test_db(db: Session = Depends(auth.get_db)):
         return {"message": "DB Connection Successful!", "users_count": len(users)}
     except Exception as e:
         return {"error": str(e)}
+      
+    
+if __name__=="__main__":
+  import uvicorn 
+  uvicorn.run(app, host="0.0.0.0.", port=8000)
