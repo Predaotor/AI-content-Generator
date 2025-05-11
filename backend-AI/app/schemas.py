@@ -20,3 +20,7 @@ class UserLogin(BaseModel):
 class Token(BaseModel):
     access_token: str 
     token_type: str
+    
+class TemplateRequest(BaseModel):
+    template_type: str  # e.g., "blog_post", "email_draft"
+    details: str  # e.g., "Write a blog post about AI technology"

@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router'; // ✅ import useRouter
 import Link from 'next/link';
 import { registerUser } from '../utils/api';
 
 const SignUpForm = () => {
+  const router = useRouter(); // ✅ get router instance
+
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -18,9 +21,11 @@ const SignUpForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await registerUser(formData);
-      setMessage('Registration successful!');
-      console.log(res); // Optionally redirect to login page
+      await registerUser(formData);
+      setMessage('Registration successful! Redirecting to Sign In...');
+      setTimeout(() => {
+        router.push('/signin'); // ✅ redirect after a delay
+      }, 1500);
     } catch (err: any) {
       setMessage(err.message || 'Registration failed.');
     }
@@ -91,7 +96,7 @@ const SignUpForm = () => {
       </form>
 
       {/* Message */}
-      {message && <p className="mt-4 text-center text-sm text-red-600">{message}</p>}
+      {message && <p className="mt-4 text-center text-sm text-green-600">{message}</p>}
 
       {/* Link to Sign In */}
       <div className="mt-4 text-center">
@@ -106,3 +111,5 @@ const SignUpForm = () => {
 };
 
 export { SignUpForm };
+
+

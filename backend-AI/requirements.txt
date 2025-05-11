@@ -7,3 +7,4 @@ passlib
 pyjwt
 bcrypt
 alembic
+openai
