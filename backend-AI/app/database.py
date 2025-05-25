@@ -1,6 +1,7 @@
 # backend app database 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from models import User, SavedOutput, UserToken  # Ensure these paths are correct
 
 import os 
 from dotenv import load_dotenv
@@ -20,3 +21,21 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+
+
+
+# Create all tables (automatically)
+def init_db() -> None:
+    """
+    Initializes the database by creating all tables.
+    """
+    Base.metadata.create_all(bind=engine)
+
+
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
