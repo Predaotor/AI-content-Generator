@@ -1,7 +1,7 @@
 import { AppConfig } from "./AppConfig";    
 
 export async function registerUser(data: {username: string,email: string, password: string}){
-    const res = await fetch(`${AppConfig.apiUrl}/register`,{
+    const res = await fetch(`${AppConfig.apiUrl}/auth/register`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -15,7 +15,7 @@ export async function registerUser(data: {username: string,email: string, passwo
 
 
 export async function loginUser(data: { username?: string, email?: string, password: string }) {
-    const res = await fetch(`${AppConfig.apiUrl}/login`, {
+    const res = await fetch(`${AppConfig.apiUrl}/auth/login`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data),
@@ -36,10 +36,10 @@ export const fetchAIResponse = async (templateType: string, details: string) => 
   let body: any = {};
 
   if (templateType === 'image') {
-    url = 'http://localhost:8000/generate-image-template';
-    body = { prompt: details };  // key must be "prompt"
+    url = `${AppConfig.apiUrl}/generate/generate-image-template`;
+    body ={ prompt: details };  // key must be "prompt"
   } else {
-    url = 'http://localhost:8000/generate-template';
+    url = `${AppConfig.apiUrl}/generate/generate-template`;
     body = { template_type: templateType, details };
   }
 

@@ -24,3 +24,15 @@ class Token(BaseModel):
 class TemplateRequest(BaseModel):
     template_type: str  # e.g., "blog_post", "email_draft"
     details: str  # e.g., "Write a blog post about AI technology"
+
+class SaveOutputRequest(BaseModel):
+    template_type: str
+    content: str
+    
+class TemplateResponse(BaseModel):
+    generated_template: str  # The generated text template
+class ImageResponse(BaseModel):
+    image_url: str  # URL of the generated image
+    
+class ImageRequest(BaseModel):
+    prompt: str

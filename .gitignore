@@ -21,7 +21,7 @@ frontend-AI/build
 frontend-AI/public/static.DS_Store
 *.pem
 Thumbs.db
-
+/.venv
 # debug
 frontend-AI/npm-debug.log*
 frontend-AI/yarn-debug.log*
@@ -38,3 +38,4 @@ frontend-AI/.vercel
 
 backend-AI/.env 
 backend-AI/venv
+backend-AI/app/__pycache__
