@@ -1,4 +1,6 @@
 from pydantic import BaseModel 
+from datetime import datetime
+from typing import List
 
 # Create schemas for user sign in and user  sign up 
 class UserCreate(BaseModel):
@@ -25,10 +27,27 @@ class TemplateRequest(BaseModel):
     template_type: str  # e.g., "blog_post", "email_draft"
     details: str  # e.g., "Write a blog post about AI technology"
 
-class SaveOutputRequest(BaseModel):
+class SavedOutputSchema(BaseModel):
     template_type: str
     content: str
+    created_at : datetime 
     
+    class config:
+        orm_mode = True
+        
+class SaveOutputRequest(BaseModel):
+    template_type: str  # e.g., "blog_post", "email_draft"
+    content: str  # e.g., "Write a blog post about AI technology"
+    
+    class Config:
+        orm_mode = True  # This allows Pydantic to read data from SQLAlchemy models
+class UserProfile(BaseModel):
+    id: int
+    email: str
+    tokens_used: int = 0  # Default to 0 tokens used
+    outputs: List[SavedOutputSchema] = []  # List of saved outputs
+    class Config:
+        orm_mode = True  # This allows Pydantic to read data from SQLAlchemy models 
 class TemplateResponse(BaseModel):
     generated_template: str  # The generated text template
 class ImageResponse(BaseModel):

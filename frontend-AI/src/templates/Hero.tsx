@@ -67,7 +67,7 @@ const Hero = () => {
           }
           description={
             <span className="text-black">
-              Generate high-quality blog posts, email copy, and more with AI-powered writing tools.
+              Generate high-quality blog posts, email copy, sophisticated images and more with AI-powered writing tools.
             </span>
           }
           button={

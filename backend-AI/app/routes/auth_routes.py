@@ -5,8 +5,9 @@ import schemas, crud
 from utils.auth import get_password_hash, create_access_token, verify_password
 from database import get_db
 from utils import auth 
-from datetime import timedelta
-
+from datetime import timedelta, date 
+from dependencies import get_current_user
+from models import User, UserToken, SavedOutput
 router = APIRouter()
 
 
@@ -57,3 +58,35 @@ async def login(user: schemas.UserLogin, db: Session = Depends(auth.get_db)):
         "token_type": "bearer",
         "username": db_user.username
     }
+    
+@router.get("/profile")
+def get_profile(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    try:
+        # Check if user is active
+        if not user.is_active:
+            raise HTTPException(status_code=403, detail="User account is inactive")
+
+        # Get tokens used
+        token_record = db.query(UserToken).filter(UserToken.user_id == user.id).first()
+        tokens_used = token_record.tokens_used if token_record else 0
+
+        # Get saved outputs
+        outputs = db.query(SavedOutput).filter(SavedOutput.user_id == user.id).all()
+        output_list = [
+            {
+                "id": output.id,
+                "template_type": output.template_type,
+                "content": output.content,
+                "created_at": output.created_at,
+            }
+            for output in outputs
+        ]
+
+        return {
+            "username": user.username,
+            "email": user.email,
+            "tokens_used": tokens_used,
+            "saved_outputs": output_list
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching profile: {str(e)}")
