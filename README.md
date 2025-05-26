@@ -3,7 +3,7 @@
 > Self-hosted AI agents with OpenAI integration, rate-limited usage, advanced image generation & persistent output saving
 
 <p align="center">
-  <img src="public/assets/images/ai-agents-banner.png" alt="AI Agents Banner" />
+  <img src="assets/images/ai-agents-banner.png" alt="AI Agents Banner" />
 </p>
 
 🚀 A powerful full-stack AI application that enables users to interact with autonomous AI agents performing sophisticated tasks, including multi-agent coordination, image generation, and persistent chat memory—all with secure token-limited access and usage monitoring.
