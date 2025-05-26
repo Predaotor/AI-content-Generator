@@ -31,7 +31,7 @@ const Hero = () => {
       <Section yPadding="py-6">
         <NavbarTwoColumns logo={<Logo xl />}>
           <li>
-            <Link href="https://github.com/your-repo">GitHub</Link>
+            <Link href="https://github.com/Predaotor/AI-content-Generator">GitHub</Link>
           </li>
           {user ? (
             <>
