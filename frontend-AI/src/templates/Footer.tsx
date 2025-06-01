@@ -53,12 +53,7 @@ const Footer = () => (
         <li>
           <Link href="/">Home</Link>
         </li>
-        <li>
-          <Link href="/">About</Link>
-        </li>
-        <li>
-          <Link href="/">Docs</Link>
-        </li>
+       
       </CenteredFooter>
     </Section>
   </Background>

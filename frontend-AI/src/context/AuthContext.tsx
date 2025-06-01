@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Create a Context for Auth
 const AuthContext = createContext<any>(null);
@@ -13,9 +13,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const login = (user: any) => {
-    localStorage.setItem('user', JSON.stringify(user));
-    setUser(user);
+  const login = (newUser: any) => {
+    localStorage.setItem('user', JSON.stringify(newUser));
+    setUser(newUser);
   };
 
   const logout = () => {

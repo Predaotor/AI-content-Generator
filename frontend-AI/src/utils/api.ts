@@ -1,47 +1,52 @@
-import { AppConfig } from "./AppConfig";    
+import { AppConfig } from './AppConfig';
 
-export async function registerUser(data: {username: string,email: string, password: string}){
-    const res = await fetch(`${AppConfig.apiUrl}/auth/register`,{
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
+export async function registerUser(data: {
+  username: string;
+  email: string;
+  password: string;
+}) {
+  const res = await fetch(`${AppConfig.apiUrl}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
 
-    if (!res.ok) {
-        throw new Error('Registration failed');
-    }
-    return res.json();
+  if (!res.ok) {
+    throw new Error('Registration failed');
+  }
+  return res.json();
 }
 
-
-export async function loginUser(data: { username?: string, email?: string, password: string }) {
-    const res = await fetch(`${AppConfig.apiUrl}/auth/login`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
-    });
-    if (!res.ok){
-        throw new Error('Login failed');
-    }
-    
-    
-    
-    const responseData = await res.json();  // Get the response data
-    localStorage.setItem('access_token', responseData.access_token);  // Store the token in localStorage
-    return responseData;  // Return the response data to AuthContext
+export async function loginUser(data: {
+  username?: string;
+  email?: string;
+  password: string;
+}) {
+  const res = await fetch(`${AppConfig.apiUrl}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    throw new Error('Login failed');
   }
 
+  const responseData = await res.json(); // Get the response data
+  localStorage.setItem('access_token', responseData.access_token); // Store the token in localStorage
+  return responseData; // Return the response data to AuthContext
+}
 
-
-
-// API call 
-export const fetchAIResponse = async (templateType: string, details: string) => {
+// API call
+export const fetchAIResponse = async (
+  templateType: string,
+  details: string,
+) => {
   let url = '';
   let body: any = {};
 
   if (templateType === 'image') {
     url = `${AppConfig.apiUrl}/generate/generate-image-template`;
-    body ={ prompt: details };  // key must be "prompt"
+    body = { prompt: details }; // key must be "prompt"
   } else {
     url = `${AppConfig.apiUrl}/generate/generate-template`;
     body = { template_type: templateType, details };
@@ -66,40 +71,38 @@ export const fetchAIResponse = async (templateType: string, details: string) => 
   return templateType === 'image' ? data.image_url : data.generated_template;
 };
 
-
 export async function fetchProfileData(token?: string) {
   if (!token) {
-    throw new Error("No token provided");
+    throw new Error('No token provided');
   }
 
   const res = await fetch(`${AppConfig.apiUrl}/auth/profile`, {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   });
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
-    throw new Error(error.detail || "Failed to fetch profile data");
+    throw new Error(error.detail || 'Failed to fetch profile data');
   }
 
   const data = await res.json();
   return data;
 }
 
-
 // SaveOutputRequest interface defines the expected structure for saving generated content.
 // - template_type: Specifies the type of content ("blog_post", "email_draft", or "image").
 // - content: The actual content to be saved.
 export interface SaveOutputRequest {
-  template_type: "blog_post" | "email_draft" | "image";
+  template_type: 'blog_post' | 'email_draft' | 'image';
   content: string;
 }
 
 /**
  * Saves generated output to the backend.
- * 
+ *
  * @param data - The output data to save (type and content).
  * @param token - The user's JWT access token for authentication.
  * @returns A promise resolving to an object with a success message and the output ID.
@@ -107,12 +110,12 @@ export interface SaveOutputRequest {
  */
 export async function saveOutput(
   data: SaveOutputRequest,
-  token: string
+  token: string,
 ): Promise<{ message: string; output_id: number }> {
   const res = await fetch(`${AppConfig.apiUrl}/save/save-output`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
@@ -121,7 +124,7 @@ export async function saveOutput(
   // If the response is not OK, try to extract the error message and throw.
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
-    throw new Error(error.detail || "Failed to save output");
+    throw new Error(error.detail || 'Failed to save output');
   }
 
   // On success, return the parsed JSON response.

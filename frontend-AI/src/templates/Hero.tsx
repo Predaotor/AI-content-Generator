@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useAuth } from '../context/AuthContext';
-import { fetchAIResponse } from '../utils/api';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 import { Background } from '../background/Background';
 import { Button } from '../button/Button';
+import { useAuth } from '../context/AuthContext';
 import { HeroOneButton } from '../hero/HeroOneButton';
 import { Section } from '../layout/Section';
 import { NavbarTwoColumns } from '../navigation/NavbarTwoColumns';
@@ -14,13 +13,12 @@ import { Logo } from './Logo';
 const Hero = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
-  const [aiText, setAiText] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [aiText] = useState('');
+  const [loading] = useState(false);
 
   const handleStartTrial = async () => {
     if (!user) {
       router.push('/signin');
-      return;
     } else {
       router.push('/ai');
     }
@@ -31,7 +29,9 @@ const Hero = () => {
       <Section yPadding="py-6">
         <NavbarTwoColumns logo={<Logo xl />}>
           <li>
-            <Link href="https://github.com/Predaotor/AI-content-Generator">GitHub</Link>
+            <Link href="https://github.com/Predaotor/AI-content-Generator">
+              GitHub
+            </Link>
           </li>
           {user ? (
             <>
@@ -39,7 +39,9 @@ const Hero = () => {
                 <Link href="/profile">{user.username}</Link>
               </li>
               <li>
-                <button onClick={logout} className="text-gray">Log Out</button>
+                <button onClick={logout} className="text-gray">
+                  Log Out
+                </button>
               </li>
             </>
           ) : (
@@ -67,20 +69,25 @@ const Hero = () => {
           }
           description={
             <span className="text-black">
-              Generate high-quality blog posts, email copy, sophisticated images and more with AI-powered writing tools.
+              Generate high-quality blog posts, email copy, sophisticated images
+              and more with AI-powered writing tools.
             </span>
           }
           button={
             <button onClick={handleStartTrial}>
-              <Button xl>{loading ? 'Generating...' : 'Start Your Free Trial'}</Button>
+              <Button xl>
+                {loading ? 'Generating...' : 'Start Your Free Trial'}
+              </Button>
             </button>
           }
         />
 
         {aiText && (
-          <div className="mt-10 bg-white p-6 rounded-xl shadow-md max-w-2xl mx-auto">
-            <h2 className="text-xl font-semibold mb-2 text-indigo-700">AI Generated Output</h2>
-            <p className="text-gray-800 whitespace-pre-wrap">{aiText}</p>
+          <div className="mx-auto mt-10 max-w-2xl rounded-xl bg-white p-6 shadow-md">
+            <h2 className="mb-2 text-xl font-semibold text-indigo-700">
+              AI Generated Output
+            </h2>
+            <p className="whitespace-pre-wrap text-gray-800">{aiText}</p>
           </div>
         )}
       </Section>

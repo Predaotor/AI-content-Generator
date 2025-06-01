@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../context/AuthContext';  // Import the auth context
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+
+import { useAuth } from '../context/AuthContext'; // Import the auth context
 import { loginUser } from '../utils/api';
 
 const SignInForm = () => {
@@ -13,7 +14,7 @@ const SignInForm = () => {
 
   const [message, setMessage] = useState('');
   const router = useRouter();
-  const { login } = useAuth();  // Get the login function from context
+  const { login } = useAuth(); // Get the login function from context
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,12 +23,12 @@ const SignInForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const user = await loginUser(formData);  // Assuming the response contains user info
-      login(user);  // Save user data in context and localStorage      
+      const user = await loginUser(formData); // Assuming the response contains user info
+      login(user); // Save user data in context and localStorage
 
       setMessage('Login successful! Redirecting...');
       setTimeout(() => {
-        router.push('/');  // Redirect to main page
+        router.push('/'); // Redirect to main page
       }, 1500);
     } catch (err: any) {
       setMessage(err.message || 'Login failed');
@@ -36,11 +37,16 @@ const SignInForm = () => {
 
   return (
     <div className="mx-auto mt-10 max-w-md rounded-lg bg-white p-8 shadow-lg">
-      <h2 className="text-center text-2xl font-bold text-indigo-600">Sign In</h2>
+      <h2 className="text-center text-2xl font-bold text-indigo-600">
+        Sign In
+      </h2>
 
       <form onSubmit={handleSubmit}>
         <div className="mt-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
             Email
           </label>
           <input
@@ -55,7 +61,10 @@ const SignInForm = () => {
         </div>
 
         <div className="mt-4">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700"
+          >
             Password
           </label>
           <input
@@ -71,18 +80,26 @@ const SignInForm = () => {
         </div>
 
         <div className="mt-6">
-          <button type="submit" className="w-full rounded-md bg-indigo-600 py-3 text-white">
+          <button
+            type="submit"
+            className="w-full rounded-md bg-indigo-600 py-3 text-white"
+          >
             Sign In
           </button>
         </div>
       </form>
 
-      {message && <p className="mt-4 text-center text-sm text-red-600">{message}</p>}
+      {message && (
+        <p className="mt-4 text-center text-sm text-red-600">{message}</p>
+      )}
 
       <div className="mt-4 text-center">
-        <p>Don&apos;t have an account?{' '}
+        <p>
+          Don&apos;t have an account?{' '}
           <Link href="/signup">
-            <span className="cursor-pointer font-semibold text-indigo-600">Sign Up</span>
+            <span className="cursor-pointer font-semibold text-indigo-600">
+              Sign Up
+            </span>
           </Link>
         </p>
       </div>
