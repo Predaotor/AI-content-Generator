@@ -33,7 +33,7 @@ class SavedOutputSchema(BaseModel):
     created_at : datetime 
     
     class config:
-        orm_mode = True
+        from_attributes = True
         
 class SaveOutputRequest(BaseModel):
     template_type: str  # e.g., "blog_post", "email_draft"

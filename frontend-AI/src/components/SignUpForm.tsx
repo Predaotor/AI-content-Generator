@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router'; // ✅ import useRouter
 import Link from 'next/link';
+import { useRouter } from 'next/router'; // ✅ import useRouter
+import { useState } from 'react';
+
 import { registerUser } from '../utils/api';
 
 const SignUpForm = () => {
@@ -33,12 +34,17 @@ const SignUpForm = () => {
 
   return (
     <div className="mx-auto mt-10 max-w-md rounded-lg bg-white p-8 shadow-lg">
-      <h2 className="text-center text-2xl font-bold text-indigo-600">Sign Up</h2>
+      <h2 className="text-center text-2xl font-bold text-indigo-600">
+        Sign Up
+      </h2>
 
       <form onSubmit={handleSubmit}>
         {/* Email */}
         <div className="mt-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
             Email
           </label>
           <input
@@ -55,7 +61,10 @@ const SignUpForm = () => {
 
         {/* Username */}
         <div className="mt-4">
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="username"
+            className="block text-sm font-medium text-gray-700"
+          >
             Username
           </label>
           <input
@@ -72,7 +81,10 @@ const SignUpForm = () => {
 
         {/* Password */}
         <div className="mt-4">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700"
+          >
             Password
           </label>
           <input
@@ -89,20 +101,28 @@ const SignUpForm = () => {
 
         {/* Submit Button */}
         <div className="mt-6">
-          <button type="submit" className="w-full rounded-md bg-indigo-600 py-3 text-white">
+          <button
+            type="submit"
+            className="w-full rounded-md bg-indigo-600 py-3 text-white"
+          >
             Sign Up
           </button>
         </div>
       </form>
 
       {/* Message */}
-      {message && <p className="mt-4 text-center text-sm text-green-600">{message}</p>}
+      {message && (
+        <p className="mt-4 text-center text-sm text-green-600">{message}</p>
+      )}
 
       {/* Link to Sign In */}
       <div className="mt-4 text-center">
-        <p>Already have an account?{' '}
+        <p>
+          Already have an account?{' '}
           <Link href="/signin">
-            <span className="cursor-pointer font-semibold text-indigo-600">Sign In</span>
+            <span className="cursor-pointer font-semibold text-indigo-600">
+              Sign In
+            </span>
           </Link>
         </p>
       </div>
@@ -111,5 +131,3 @@ const SignUpForm = () => {
 };
 
 export { SignUpForm };
-
-

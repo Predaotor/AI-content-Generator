@@ -5,6 +5,6 @@ export const AppConfig = {
     'Generate high-quality content effortlessly with AI-powered tools for blogs, emails, ads, and more.',
   locale: 'en',
 
-  // Backend API base URL 
+  // Backend API base URL
   apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
 };
