@@ -5,6 +5,8 @@ services:
       - "8000:8000"
     env_file:
       - ./backend-AI/.env
+    volumes:
+      - ./backend-AI/app:/app
     depends_on:
       - frontend
     networks:
@@ -16,6 +18,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend-AI:/src
     networks:
       - ai-app
 networks:
