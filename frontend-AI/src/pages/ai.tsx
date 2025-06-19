@@ -1,25 +1,21 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-
+import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
 import type { SaveOutputRequest } from '../utils/api';
 import { fetchAIResponse, fetchProfileData, saveOutput } from '../utils/api';
 
-const FREE_TOKEN_LIMIT = 1000; // same as backend limit
+const FREE_TOKEN_LIMIT = 1000;
 
-const AIPage = () => {
+export default function AIPage() {
   const { user } = useAuth();
   const router = useRouter();
 
-  const [templateType, setTemplateType] = useState<
-    'blog_post' | 'email_draft' | 'image'
-  >('blog_post');
+  const [templateType, setTemplateType] = useState<'blog_post' | 'email_draft' | 'image'>('blog_post');
   const [details, setDetails] = useState('');
   const [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // Use tokenUsage state for tokens used
+  const [darkMode, setDarkMode] = useState(false);
   const [tokenUsage, setTokenUsage] = useState<number | null>(null);
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
@@ -37,6 +33,8 @@ const AIPage = () => {
     }
   }, [user]);
 
+  const toggleDarkMode = () => setDarkMode((prev) => !prev);
+
   const handleGenerate = async () => {
     setLoading(true);
     setOutput('');
@@ -44,15 +42,13 @@ const AIPage = () => {
     try {
       const result = await fetchAIResponse(templateType, details);
       setOutput(result);
-      // Optionally, refresh token usage after generation if backend updates it
       const token = localStorage.getItem('access_token');
       if (token) {
         fetchProfileData(token).then((profile) => {
           setTokenUsage(profile.tokens_used);
         });
       }
-    } catch (err) {
-      console.error('Generation error:', err);
+    } catch {
       setOutput('Failed to generate content.');
     } finally {
       setLoading(false);
@@ -82,7 +78,6 @@ const AIPage = () => {
       };
       await saveOutput(data, token);
       setSaveMessage('Output saved successfully!');
-      // Optionally, refresh token usage after saving
       fetchProfileData(token).then((profile) => {
         setTokenUsage(profile.tokens_used);
       });
@@ -93,9 +88,7 @@ const AIPage = () => {
     }
   };
 
-  const handleTemplateTypeChange = (
-    type: 'blog_post' | 'email_draft' | 'image',
-  ) => {
+  const handleTemplateTypeChange = (type: 'blog_post' | 'email_draft' | 'image') => {
     setTemplateType(type);
     setDetails('');
     setOutput('');
@@ -105,38 +98,55 @@ const AIPage = () => {
   const overLimit = tokenUsage !== null && tokenUsage >= FREE_TOKEN_LIMIT;
 
   return (
-    <div className="min-h-screen bg-indigo-600 px-4 py-12 text-white">
-      <div className="mx-auto max-w-3xl rounded-xl bg-white p-8 text-black shadow-lg">
-        {/* Navigation Links */}
-        <div className="mb-4 flex justify-end gap-4">
+    <div
+      className="min-h-screen px-4 py-12 bg-center bg-cover"
+      style={{ backgroundImage: "url('/assets/images/AI.png')" }}
+    >
+      {/* Navigation Bar */}
+      <div className="flex items-center justify-between max-w-5xl mx-auto mb-6">
+        <button
+          onClick={toggleDarkMode}
+          className={`px-4 py-2 font-semibold rounded transition ${
+            darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-indigo-700 hover:bg-gray-300'
+          }`}
+        >
+          {darkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
+
+        <div className="flex gap-4">
           <Link href="/">
-            <span className="cursor-pointer font-semibold text-indigo-700 hover:underline">
+            <span className="px-3 py-1 font-semibold text-indigo-700 bg-white rounded cursor-pointer hover:underline">
               Home
             </span>
           </Link>
           <Link href="/profile">
-            <span className="cursor-pointer font-semibold text-indigo-700 hover:underline">
+            <span className="px-3 py-1 font-semibold text-indigo-700 bg-white rounded cursor-pointer hover:underline">
               Profile
             </span>
           </Link>
         </div>
+      </div>
 
-        <h1 className="mb-6 text-center text-3xl font-bold">🤖 AI Assistant</h1>
+      {/* Chatbot UI */}
+      <div
+        className={`max-w-3xl mx-auto p-8 shadow-lg rounded-xl backdrop-blur-sm bg-opacity-90 ${
+          darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'
+        }`}
+      >
+        <h1 className="mb-6 text-3xl font-bold text-center">🤖 AI Assistant</h1>
 
-        {/* Token usage display */}
-        <div className="mb-6 rounded bg-indigo-200 p-3 font-semibold text-indigo-900">
-          Tokens Used: {tokenUsage !== null ? tokenUsage : '...'} /{' '}
-          {FREE_TOKEN_LIMIT}
-          {overLimit && (
-            <span className="ml-4 font-bold text-red-600">
-              Token limit reached!
-            </span>
-          )}
+        <div
+          className={`p-3 mb-6 font-semibold rounded ${
+            darkMode ? 'bg-indigo-800 text-white' : 'bg-indigo-200 text-indigo-900'
+          }`}
+        >
+          Tokens Used: {tokenUsage !== null ? tokenUsage : '...'} / {FREE_TOKEN_LIMIT}
+          {overLimit && <span className="ml-4 font-bold text-red-500">Token limit reached!</span>}
         </div>
 
         {/* Template Selector */}
         <div className="mb-6">
-          <label className="mb-3 block text-lg font-semibold text-gray-800">
+          <label className={`block mb-3 text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             Select Template Type:
           </label>
           <div className="flex flex-wrap gap-4">
@@ -151,7 +161,9 @@ const AIPage = () => {
                 className={`rounded-xl border px-5 py-3 shadow-md transition duration-300 ${
                   templateType === option.type
                     ? 'bg-indigo-600 text-white ring-2 ring-indigo-300 ring-offset-2'
-                    : 'bg-white text-gray-800 hover:bg-indigo-100'
+                    : darkMode
+                      ? 'bg-gray-700 text-white hover:bg-gray-600'
+                      : 'bg-white text-gray-800 hover:bg-indigo-100'
                 }`}
               >
                 {option.label}
@@ -160,13 +172,17 @@ const AIPage = () => {
           </div>
         </div>
 
-        {/* Prompt Input */}
+        {/* Input */}
         <div className="mb-6">
-          <label className="mb-1 block font-medium text-gray-700">
+          <label className={`block mb-1 font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
             Prompt / Details:
           </label>
           <textarea
-            className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-300 ${
+              darkMode
+                ? 'bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:ring-indigo-500'
+                : 'bg-white text-black border-gray-300 placeholder-gray-500 focus:ring-indigo-300'
+            }`}
             rows={4}
             value={details}
             onChange={(e) => setDetails(e.target.value)}
@@ -175,21 +191,18 @@ const AIPage = () => {
           />
         </div>
 
-        {/* Generate Button */}
         <button
           onClick={handleGenerate}
-          className="rounded bg-indigo-600 px-6 py-2 text-white transition duration-200 hover:bg-indigo-700"
+          className="px-6 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700"
           disabled={loading || overLimit}
         >
           {loading ? 'Generating...' : 'Generate'}
         </button>
 
-        {/* Output */}
+        {/* Output Section */}
         {output && (
           <div className="mt-8">
-            <h2 className="mb-4 text-xl font-semibold text-indigo-700">
-              Generated Output:
-            </h2>
+            <h2 className="mb-4 text-xl font-semibold text-indigo-300">Generated Output:</h2>
             {templateType === 'image' ? (
               <>
                 <img
@@ -199,13 +212,13 @@ const AIPage = () => {
                 />
                 <button
                   onClick={downloadImage}
-                  className="mr-4 rounded bg-green-600 px-4 py-2 text-white transition duration-200 hover:bg-green-700"
+                  className="px-4 py-2 mr-4 text-white transition duration-200 bg-green-600 rounded hover:bg-green-700"
                 >
                   Download Image
                 </button>
                 <button
                   onClick={handleSave}
-                  className="rounded bg-indigo-600 px-4 py-2 text-white transition duration-200 hover:bg-indigo-700"
+                  className="px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700"
                   disabled={saveLoading || overLimit}
                 >
                   {saveLoading ? 'Saving...' : 'Save Output'}
@@ -213,26 +226,26 @@ const AIPage = () => {
               </>
             ) : (
               <>
-                <div className="mb-4 whitespace-pre-wrap rounded border bg-gray-100 p-4 text-sm leading-relaxed">
+                <div
+                  className={`p-4 mb-4 text-sm leading-relaxed whitespace-pre-wrap border rounded ${
+                    darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-black'
+                  }`}
+                >
                   {output}
                 </div>
                 <button
                   onClick={handleSave}
-                  className="rounded bg-indigo-600 px-4 py-2 text-white transition duration-200 hover:bg-indigo-700"
+                  className="px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700"
                   disabled={saveLoading || overLimit}
                 >
                   {saveLoading ? 'Saving...' : 'Save Output'}
                 </button>
               </>
             )}
-            {saveMessage && (
-              <p className="mt-2 text-sm text-green-600">{saveMessage}</p>
-            )}
+            {saveMessage && <p className="mt-2 text-sm text-green-400">{saveMessage}</p>}
           </div>
         )}
       </div>
     </div>
   );
-};
-
-export default AIPage;
+}
