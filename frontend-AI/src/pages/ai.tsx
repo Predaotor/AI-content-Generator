@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
 import type { SaveOutputRequest } from '../utils/api';
@@ -19,7 +19,7 @@ const TypingEffect = ({ text, speed = 2, className = '' }: { text: string; speed
       setDisplayedText('');
       setCurrentIndex(0);
     }
-  }, [text]);
+  }, [text, isTyping]);
 
   useEffect(() => {
     if (isTyping && currentIndex < text.length) {

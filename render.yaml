@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: ai-content-generator
+    runtime: docker
+    plan: starter
+    region: oregon
+    buildCommand: ""
+    startCommand: docker-compose up --build -d
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_PUBLIC_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: "production"
+      - key: DEBUG
+        value: "false"
+      - key: NODE_ENV
+        value: "production"
+      - key: NEXT_PUBLIC_API_URL
+        value: "https://ai-content-generator.onrender.com/api"
+    healthCheckPath: /health
+    autoDeploy: true

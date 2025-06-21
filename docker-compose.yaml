@@ -1,27 +1,66 @@
+version: '3.8'
+
 services:
+  # Backend API
   backend:
-    build: ./backend-AI
+    build: 
+      context: ./backend-AI
+      dockerfile: Dockerfile
+      target: runner
     ports:
       - "8000:8000"
     env_file:
       - ./backend-AI/.env
+    environment:
+      - ENVIRONMENT=production
     volumes:
-      - ./backend-AI/app:/app
-    depends_on:
-      - frontend
+      - uploads:/app/uploads
     networks:
       - ai-app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # Frontend Application
   frontend:
     build:
       context: ./frontend-AI
       dockerfile: Dockerfile
+      target: runner
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend-AI:/src
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NODE_ENV=production
+    depends_on:
+      - backend
     networks:
       - ai-app
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - uploads:/var/www/uploads
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - ai-app
+    restart: unless-stopped
+
+volumes:
+  uploads:
+
 networks:
   ai-app:
     driver: bridge

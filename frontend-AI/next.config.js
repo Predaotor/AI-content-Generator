@@ -3,16 +3,50 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
-module.exports = withBundleAnalyzer({
+const nextConfig = {
+  output: 'standalone',
   eslint: {
-  ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true,
     dirs: ['.'],
   },
   poweredByHeader: false,
-  trailingSlash: true,
-  basePath: '',
-  // The starter code load resources from `public` folder with `router.basePath` in React components.
-  // So, the source code is "basePath-ready".
-  // You can remove `basePath` if you don't need it.
   reactStrictMode: true,
-});
+  swcMinify: true,
+  images: {
+    domains: ['localhost'],
+    unoptimized: true,
+  },
+  experimental: {
+    optimizeCss: true,
+  },
+  env: {
+    customKey: 'my-value',
+  },
+  basePath: '',
+  trailingSlash: false,
+  skipTrailingSlashRedirect: false,
+  compress: true,
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
+  },
+};
+
+module.exports = withBundleAnalyzer(nextConfig);

@@ -10,7 +10,11 @@ from routes import auth_routes, generate_routes, save_routes
 
 
 
-app=FastAPI() 
+app=FastAPI(
+    title="AI Content Generator API",
+    description="A FastAPI backend for AI-powered content generation",
+    version="1.0.0"
+) 
 
 # Initialize DB tables 
 init_db()
@@ -22,6 +26,8 @@ init_db()
 origins=[ 
         "http://localhost:3000", # REACT/Next.js dev server 
         "http://127.0.0.1:3000",
+        "http://localhost:80",   # Nginx proxy
+        "http://localhost:443",  # Nginx SSL proxy
          ]
 
 
@@ -42,6 +48,20 @@ app.include_router(save_routes.router, prefix="/save")
 # OAuth2PasswordBearer is used to extract the token from requests
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+
+@app.get("/")
+async def root():
+    """Root endpoint with API information"""
+    return {
+        "message": "AI Content Generator API",
+        "version": "1.0.0",
+        "status": "running"
+    }
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Docker and monitoring"""
+    return {"status": "healthy", "service": "ai-content-generator-api"}
 
 @app.get("/protected")
 async def  protected_route(token: str=Depends(oauth2_scheme)):
