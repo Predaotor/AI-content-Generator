@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -36,7 +37,16 @@ const Hero = () => {
           {user ? (
             <>
               <li className="text-black">
-                <Link href="/profile">{user.username}</Link>
+                <Link href="/profile" className="flex items-center space-x-2 rounded-lg border border-indigo-200 bg-white bg-opacity-20 px-3 py-2 hover:bg-opacity-30 transition-all duration-200">
+                  <Image
+                    src="/assets/images/user_logo.png"
+                    alt="User Logo"
+                    width={24}
+                    height={24}
+                    className="rounded-full border border-indigo-200"
+                  />
+                  <span className="font-medium">{user.username}</span>
+                </Link>
               </li>
               <li>
                 <button onClick={logout} className="text-gray">
