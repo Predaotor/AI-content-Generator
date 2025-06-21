@@ -1,161 +1,151 @@
-# AI Content Generator
+# 🧠 AI Content Generator – Intelligent Content Creation with Railway Database
 
-A modern, full-stack AI-powered content generation application built with Next.js, FastAPI, and OpenAI.
+Built with **Next.js 14**, **TypeScript**, **Tailwind CSS**, **FastAPI**, and **PostgreSQL** (Railway)
+Self-hosted AI content generation with OpenAI integration, user authentication, advanced image generation & persistent output saving
 
-## 🚀 Features
+![AI Content Generator Banner](AI.png)
 
-- **AI-Powered Content Generation**: Create blog posts, email drafts, and images
-- **User Authentication**: Secure user registration and login system
-- **Content Management**: Save and manage generated content
-- **Modern UI**: Beautiful, responsive interface with smooth animations
-- **Real-time Typing Effect**: ChatGPT-like content display
-- **Token Management**: Track and limit API usage
-- **Dark/Light Mode**: Toggle between themes
+🚀 A powerful full-stack AI application that enables users to generate high-quality content including blog posts, email drafts, and AI-generated images—all with secure JWT authentication, usage tracking, and persistent storage powered by Railway PostgreSQL.
 
-## 🛠️ Tech Stack
+This is a fully custom-built application, designed and developed from scratch, combining advanced LLM capabilities with a modern, responsive frontend and robust FastAPI backend.
 
-### Frontend
-- **Next.js 14** - React framework
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Styling
-- **React Context** - State management
+## 📽️ Demo Recording (Coming Soon)
+A recorded walkthrough will soon be available where I:
 
-### Backend
-- **FastAPI** - Python web framework
-- **SQLAlchemy** - ORM
-- **PostgreSQL** - Database
-- **JWT** - Authentication
-- **OpenAI API** - AI content generation
+- Showcase content generation in action (blog posts, emails, images)
+- Walk through image generation (prompt to result, including sophisticated scenes)
+- Show Railway database with user data & saved outputs
+- Point to backend logs and authentication flow
+- Demonstrate real-time frontend/backend interaction
+- Show deployment process on Render.com or VPS
 
-### Infrastructure
-- **Docker** - Containerization
-- **Docker Compose** - Multi-container orchestration
-- **Nginx** - Reverse proxy
-- **PostgreSQL** - Database
+Recording tools: OBS Studio, Railway dashboard, browser console, and Postman/DevTools for API behavior.
 
-## 📋 Prerequisites
+## ✨ Key Features
 
-- Docker and Docker Compose
-- OpenAI API key
-- PostgreSQL (included in Docker setup)
+🤖 **AI Content Generation**: Generate blog posts, email drafts, and marketing content with OpenAI
+🎨 **Image Generation**: Sophisticated image outputs via DALL-E 3 integration
+💬 **User Authentication**: Secure JWT-based authentication with user profiles
+🛡️ **Usage Tracking**: Monitor and limit user usage with persistent storage
+🧠 **Output Management**: Save and retrieve generated content with metadata
+🔐 **Secure Backend API**: Built with FastAPI with request rate limiting and CORS
+🗄️ **Railway Database**: Managed PostgreSQL with automatic backups and scaling
+🐳 **Docker Ready**: Complete containerization for easy deployment
+🌐 **Production Ready**: Nginx reverse proxy, SSL support, and health checks
 
-## 🚀 Quick Start
+## 🛠️ Stack & Tools
 
-### 1. Clone the Repository
+| Layer | Tech Used |
+|-------|-----------|
+| **Frontend** | Next.js 14, TypeScript, Tailwind CSS |
+| **Backend** | FastAPI (Python), SQLAlchemy ORM |
+| **Database** | PostgreSQL (Railway managed) |
+| **Authentication** | JWT Bearer tokens, bcrypt hashing |
+| **AI Models** | GPT-3.5-turbo, DALL-E 3 |
+| **DevOps** | Docker, Docker Compose, Nginx |
+| **Deployment** | Render.com, Fly.io, VPS ready |
+
+## 🚧 Status
+
+✅ **Core functionality complete**
+✅ **User authentication working**
+✅ **AI content generation implemented**
+✅ **Image generation with DALL-E 3**
+✅ **Railway database integration**
+✅ **Docker containerization**
+✅ **Production deployment configuration**
+✅ **Nginx reverse proxy setup**
+🔜 **Video recording + documentation polish**
+🔜 **Advanced usage analytics**
+
+## 🧪 Running Locally
+
+### Prerequisites
+- Node.js 18+
+- Python 3.8+
+- Docker & Docker Compose
+- Railway account for database
+
+### Quick Start
 ```bash
-git clone <repository-url>
+# Clone the repository
+git clone https://github.com/Predaotor/AI-content-Generator
 cd AI-content-Generator
-```
 
-### 2. Set Up Railway Database
-1. Create a new project on [Railway](https://railway.app/)
-2. Add a PostgreSQL database to your project
-3. Get your database connection URL from Railway dashboard
-
-### 3. Set Up Environment Variables
-
-You need to set up environment variables in two locations:
-
-#### Root Level (.env for Docker Compose)
-```bash
+# Set up environment variables
 cp env.example .env
+# Edit .env with your Railway database URL and OpenAI API key
+
+# Start with Docker Compose
+docker-compose up --build -d
+
+# Or run individually
+cd frontend-AI && npm install && npm run dev
+cd backend-AI && pip install -r requirements.txt && uvicorn app.main:app --reload
 ```
 
-Edit `.env` file with your actual values:
-```env
-# Frontend Configuration
-NEXT_PUBLIC_API_URL=http://localhost:8000
-NODE_ENV=production
-```
-
-#### Backend Level (backend-AI/.env for FastAPI)
-Create `backend-AI/.env` file with your backend configuration:
-```env
-# Database Configuration (Railway)
-DATABASE_URL=postgresql://username:password@host:port/database_name
+### Environment Variables
+```bash
+# Railway Database
+DATABASE_URL=postgresql://user:pass@host:port/db
+DATABASE_PUBLIC_URL=postgresql://user:pass@host:port/db
 
 # Security
-SECRET_KEY=your_super_secret_key_here_make_it_long_and_random
-JWT_SECRET_KEY=your_jwt_secret_key_here
+SECRET_KEY=your_super_secret_key
+JWT_SECRET_KEY=your_jwt_secret
 
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key_here
+# OpenAI
+OPENAI_API_KEY=your_openai_api_key
 
-# Application Configuration
-ENVIRONMENT=production
-DEBUG=false
+# App Config
+ENVIRONMENT=development
+DEBUG=true
 ```
 
-### 4. Deploy with Docker Compose
+## 🚀 Deployment
+
+### Option 1: Render.com (Recommended)
+1. Fork/clone this repository
+2. Create Render account and connect GitHub
+3. Set environment variables in Render dashboard
+4. Deploy automatically with `render.yaml`
+
+### Option 2: VPS Deployment
 ```bash
-# Make deployment script executable
-chmod +x deploy.sh
-
-# Run deployment
-./deploy.sh
+# Follow detailed guide in DEPLOYMENT.md
+# Quick deployment:
+./deploy-production.sh  # Linux/Mac
+deploy-production.bat   # Windows
 ```
 
-Or manually:
-```bash
-docker-compose up --build -d
-```
-
-### 5. Access the Application
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **Nginx (if enabled)**: http://localhost:80
-
-## 🔧 Development Setup
-
-### Frontend Development
-```bash
-cd frontend-AI
-npm install
-npm run dev
-```
-
-### Backend Development
-```bash
-cd backend-AI
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+### Option 3: Railway Full Stack
+- Database: Already on Railway
+- Backend: Deploy to Railway with Docker
+- Frontend: Deploy to Railway with Docker
 
 ## 📁 Project Structure
 
 ```
 AI-content-Generator/
-├── frontend-AI/                 # Next.js frontend
+├── frontend-AI/          # Next.js frontend
 │   ├── src/
-│   │   ├── components/         # React components
-│   │   ├── pages/             # Next.js pages
-│   │   ├── utils/             # Utility functions
-│   │   └── styles/            # Global styles
-│   ├── public/                # Static assets
-│   └── Dockerfile             # Frontend container
-├── backend-AI/                 # FastAPI backend
+│   │   ├── pages/       # Next.js pages
+│   │   ├── components/  # React components
+│   │   └── utils/       # API utilities
+│   └── Dockerfile       # Frontend container
+├── backend-AI/          # FastAPI backend
 │   ├── app/
-│   │   ├── routes/            # API routes
-│   │   ├── models/            # Database models
-│   │   ├── utils/             # Utility functions
-│   │   └── main.py            # FastAPI app
-│   └── Dockerfile             # Backend container
-├── docker-compose.yaml         # Multi-container setup
-├── nginx.conf                  # Nginx configuration
-├── deploy.sh                   # Deployment script
-└── env.example                 # Environment variables template
+│   │   ├── routes/      # API endpoints
+│   │   ├── models.py    # Database models
+│   │   └── main.py      # FastAPI app
+│   └── Dockerfile       # Backend container
+├── docker-compose.yaml  # Multi-container setup
+├── nginx.conf          # Reverse proxy config
+├── DEPLOYMENT.md       # Deployment guide
+└── render.yaml         # Render.com config
 ```
 
-## 🔒 Security Features
-
-- JWT-based authentication
-- Password hashing with bcrypt
-- Rate limiting with Nginx
-- Security headers
-- Non-root Docker containers
-- Environment variable management
-
-## 📊 API Endpoints
+## 🔧 API Endpoints
 
 ### Authentication
 - `POST /auth/register` - User registration
@@ -163,97 +153,92 @@ AI-content-Generator/
 - `GET /auth/profile` - Get user profile
 
 ### Content Generation
-- `POST /generate/{template_type}` - Generate content
-- `POST /save` - Save generated content
-- `GET /saved` - Get saved content
+- `POST /generate/generate-template` - Generate text content
+- `POST /generate/generate-image-template` - Generate images
+- `POST /save/save-output` - Save generated content
 
-## 🚀 Production Deployment
+### Health Check
+- `GET /health` - Service health status
 
-### 1. Environment Setup
-- Set all required environment variables
-- Configure SSL certificates
-- Set up domain names
+## 🛡️ Security Features
 
-### 2. Database Setup
-- PostgreSQL is automatically set up with Docker
-- Data is persisted in Docker volumes
+- **JWT Authentication**: Secure token-based auth
+- **Password Hashing**: bcrypt for password security
+- **Rate Limiting**: API request throttling
+- **CORS Protection**: Cross-origin request security
+- **Input Validation**: Pydantic models for data validation
+- **SQL Injection Protection**: SQLAlchemy ORM
 
-### 3. SSL Configuration
-Uncomment and configure SSL in `nginx.conf`:
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name your-domain.com;
-    ssl_certificate /etc/nginx/ssl/cert.pem;
-    ssl_certificate_key /etc/nginx/ssl/key.pem;
-    # ... rest of configuration
-}
-```
+## 📊 Database Schema
 
-### 4. Monitoring
-- Health checks are configured for all services
-- Logs can be viewed with `docker-compose logs`
+### Users Table
+- `id`: Primary key
+- `username`: Unique username
+- `email`: Unique email
+- `hashed_password`: Bcrypt hashed password
+- `created_at`: Account creation timestamp
 
-## 🔧 Configuration
+### Saved Outputs Table
+- `id`: Primary key
+- `user_id`: Foreign key to users
+- `template_type`: Content type (blog_post, email_draft, image)
+- `content`: Generated content
+- `created_at`: Generation timestamp
 
-### Frontend Configuration
-- Update `NEXT_PUBLIC_API_URL` in `.env`
-- Configure image domains in `next.config.js`
+## 🐳 Docker Configuration
 
-### Backend Configuration
-- Set database URL in `.env`
-- Configure OpenAI API key
-- Set JWT secrets
+### Multi-Stage Builds
+- **Frontend**: Node.js Alpine with Next.js optimization
+- **Backend**: Python Alpine with FastAPI
+- **Nginx**: Reverse proxy with SSL support
 
-### Nginx Configuration
-- Rate limiting settings
-- SSL configuration
-- Security headers
+### Health Checks
+- Backend: `http://localhost:8000/health`
+- Frontend: `http://localhost:3000`
+- Automatic restart on failure
 
-## 📝 Environment Variables
+## 💰 Cost Estimation
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `DB_PASSWORD` | Database password | Yes |
-| `DB_PORT` | Database port | Yes |
-| `NEXT_PUBLIC_API_URL` | Backend API URL | Yes |
-| `NODE_ENV` | Environment (production/development) | No |
+### Monthly Costs (Approximate)
+- **Railway Database**: $5-20/month (depending on usage)
+- **Render.com**: Free tier available, then $7/month
+- **Domain**: $10-15/year (optional)
+- **Total**: $5-35/month
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Services not starting**
-   ```bash
-   docker-compose logs
-   ```
-
-2. **Database connection issues**
-   - Check PostgreSQL container status
-   - Verify database credentials
-
-3. **API connection issues**
-   - Ensure backend is running
-   - Check `NEXT_PUBLIC_API_URL` configuration
-
-4. **Build failures**
-   - Clear Docker cache: `docker system prune`
-   - Rebuild: `docker-compose build --no-cache`
-
-## 📄 License
-
-This project is licensed under the ISC License.
+### Free Tier Options
+- **Railway**: Free tier available
+- **Render**: Free tier available
+- **Fly.io**: Free tier available
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **OpenAI** for GPT and DALL-E APIs
+- **Railway** for managed PostgreSQL
+- **Next.js** team for the amazing framework
+- **FastAPI** team for the high-performance backend framework
 
 ## 📞 Support
 
-For support and questions, please open an issue in the repository.
+For deployment issues:
+1. Check logs: `docker-compose logs -f`
+2. Verify environment variables
+3. Test database connection
+4. Review platform-specific documentation
+
+---
+
+**Ready to generate amazing content?** Deploy this application and start creating with AI! 🚀
 
 
