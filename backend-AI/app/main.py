@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session 
 from database import init_db
 from fastapi.security import OAuth2PasswordBearer
-import  models
+import models
 from utils import auth 
 from fastapi.middleware.cors import CORSMiddleware
 from routes import auth_routes, generate_routes, save_routes

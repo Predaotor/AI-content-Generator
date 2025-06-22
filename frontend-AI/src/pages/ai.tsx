@@ -44,6 +44,7 @@ const TypingEffect = ({ text, speed = 2, className = '' }: { text: string; speed
     } else if (currentIndex >= text.length) {
       setIsTyping(false);
     }
+    return undefined; // Explicit return for all code paths
   }, [currentIndex, text, speed, isTyping]);
 
   return (
