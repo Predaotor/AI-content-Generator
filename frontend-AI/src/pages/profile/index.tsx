@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 import { fetchProfileData } from '@/utils/api';
@@ -38,12 +37,12 @@ export default function ProfilePage() {
   if (!profile) return <div className="p-4 text-white">Loading...</div>;
 
   return (
-    <div className="p-10 min-h-screen text-white bg-indigo-600">
+    <div className="min-h-screen bg-indigo-600 p-10 text-white">
       <div className="mx-auto max-w-4xl">
         {/* Home Link */}
-        <div className="flex justify-end mb-4">
+        <div className="mb-4 flex justify-end">
           <Link href="/">
-            <span className="font-semibold text-indigo-200 cursor-pointer hover:underline">
+            <span className="cursor-pointer font-semibold text-indigo-200 hover:underline">
               Home
             </span>
           </Link>
@@ -51,33 +50,18 @@ export default function ProfilePage() {
 
         <h1 className="mb-6 text-4xl font-bold">User Profile</h1>
 
-        {/* User Card with Logo */}
-        <div className="p-6 mb-8 text-indigo-50 bg-indigo-400 bg-opacity-30 rounded-lg border-2 border-indigo-300 shadow-lg">
-          <div className="flex items-center pb-4 mb-4 space-x-4 border-b border-indigo-300">
-            <div className="flex-shrink-0">
-              <Image
-                src="/assets/images/user_logo.png"
-                alt="User Logo"
-                width={48}
-                height={48}
-                className="rounded-full border-2 border-indigo-200"
-              />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-white">{profile.username}</h2>
-              <p className="text-indigo-200">Welcome back!</p>
-            </div>
+        <div className="mb-8 space-y-4 rounded-lg bg-indigo-400 bg-opacity-30 p-6 text-indigo-50 shadow-lg">
+          <div className="flex justify-between border-b border-indigo-300 pb-2">
+            <span className="text-lg font-semibold">Username</span>
+            <span>{profile.username}</span>
           </div>
-          
-          <div className="space-y-4">
-            <div className="flex justify-between pb-2 border-b border-indigo-300">
-              <span className="text-lg font-semibold">Email</span>
-              <span>{profile.email}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-lg font-semibold">Tokens Used Today</span>
-              <span>{profile.tokens_used}</span>
-            </div>
+          <div className="flex justify-between border-b border-indigo-300 pb-2">
+            <span className="text-lg font-semibold">Email</span>
+            <span>{profile.email}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-semibold">Tokens Used Today</span>
+            <span>{profile.tokens_used}</span>
           </div>
         </div>
 
@@ -89,12 +73,12 @@ export default function ProfilePage() {
             {profile.saved_outputs.map((output) => (
               <div
                 key={output.id}
-                className="p-5 rounded-md shadow-md transition-shadow duration-300 bg-indigo-500/50 hover:shadow-xl"
+                className="rounded-md bg-indigo-500/50  p-5 shadow-md transition-shadow duration-300 hover:shadow-xl"
               >
-                <h3 className="pb-1 mb-2 text-xl font-semibold capitalize border-b border-indigo-300">
+                <h3 className="mb-2 border-b border-indigo-300 pb-1 text-xl font-semibold capitalize">
                   {output.template_type.replace(/_/g, ' ')}
                 </h3>
-                <p className="mb-3 text-sm whitespace-pre-wrap">
+                <p className="mb-3 whitespace-pre-wrap text-sm">
                   {output.content}
                 </p>
                 <small className="text-indigo-300">

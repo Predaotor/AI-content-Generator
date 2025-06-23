@@ -7,72 +7,6 @@ import { fetchAIResponse, fetchProfileData, saveOutput } from '../utils/api';
 
 const FREE_TOKEN_LIMIT = 1000;
 
-// Enhanced typing effect component for ChatGPT-like experience
-const TypingEffect = ({ text, speed = 2, className = '' }: { text: string; speed?: number; className?: string }) => {
-  const [displayedText, setDisplayedText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    if (text && !isTyping) {
-      setIsTyping(true);
-      setDisplayedText('');
-      setCurrentIndex(0);
-    }
-  }, [text, isTyping]);
-
-  useEffect(() => {
-    if (isTyping && currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        // Adaptive chunk size based on remaining text
-        let charsToAdd = 1;
-        if (text.length - currentIndex > 100) {
-          charsToAdd = 4; // Faster for long text
-        } else if (text.length - currentIndex > 50) {
-          charsToAdd = 3; // Medium speed
-        } else {
-          charsToAdd = 2; // Slower for short remaining text
-        }
-        
-        charsToAdd = Math.min(charsToAdd, text.length - currentIndex);
-        const nextChars = text.slice(currentIndex, currentIndex + charsToAdd);
-        setDisplayedText(prev => prev + nextChars);
-        setCurrentIndex(prev => prev + charsToAdd);
-      }, speed);
-
-      return () => clearTimeout(timeout);
-    } else if (currentIndex >= text.length) {
-      setIsTyping(false);
-    }
-    return undefined; // Explicit return for all code paths
-  }, [currentIndex, text, speed, isTyping]);
-
-  return (
-    <div className={`font-mono leading-relaxed ${className}`}>
-      {displayedText}
-      {isTyping && <span className="font-bold text-indigo-400 animate-pulse">▋</span>}
-    </div>
-  );
-};
-
-// Loading spinner component
-const LoadingSpinner = () => (
-  <div className="flex items-center space-x-2">
-    <div className="w-4 h-4 rounded-full border-b-2 border-white animate-spin"></div>
-    <span>Generating...</span>
-  </div>
-);
-
-// Progress bar component
-const ProgressBar = ({ progress }: { progress: number }) => (
-  <div className="mb-4 w-full h-2 bg-gray-200 rounded-full">
-    <div 
-      className="h-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-300 ease-out"
-      style={{ width: `${progress}%` }}
-    ></div>
-  </div>
-);
-
 export default function AIPage() {
   const { user } = useAuth();
   const router = useRouter();
@@ -85,8 +19,6 @@ export default function AIPage() {
   const [tokenUsage, setTokenUsage] = useState<number | null>(null);
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
-  const [showOutput, setShowOutput] = useState(false);
-  const [generationProgress, setGenerationProgress] = useState(0);
 
   useEffect(() => {
     if (!user) {
@@ -107,32 +39,9 @@ export default function AIPage() {
     setLoading(true);
     setOutput('');
     setSaveMessage('');
-    setShowOutput(false);
-    setGenerationProgress(0);
-    
-    // Simulate progress during generation
-    const progressInterval = setInterval(() => {
-      setGenerationProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(progressInterval);
-          return 90;
-        }
-        return prev + 10;
-      });
-    }, 150); // Faster progress updates
-    
     try {
       const result = await fetchAIResponse(templateType, details);
-      clearInterval(progressInterval);
-      setGenerationProgress(100);
-      
-      // Shorter delay for faster content appearance
-      setTimeout(() => {
-        setOutput(result);
-        setShowOutput(true);
-        setGenerationProgress(0);
-      }, 200); // Reduced delay for faster display
-      
+      setOutput(result);
       const token = localStorage.getItem('access_token');
       if (token) {
         fetchProfileData(token).then((profile) => {
@@ -140,10 +49,7 @@ export default function AIPage() {
         });
       }
     } catch {
-      clearInterval(progressInterval);
-      setGenerationProgress(0);
       setOutput('Failed to generate content.');
-      setShowOutput(true);
     } finally {
       setLoading(false);
     }
@@ -193,15 +99,15 @@ export default function AIPage() {
 
   return (
     <div
-      className="px-4 py-12 min-h-screen bg-center bg-cover"
+      className="min-h-screen px-4 py-12 bg-center bg-cover"
       style={{ backgroundImage: "url('/assets/images/AI.png')" }}
     >
       {/* Navigation Bar */}
-      <div className="flex justify-between items-center mx-auto mb-6 max-w-5xl">
+      <div className="flex items-center justify-between max-w-5xl mx-auto mb-6">
         <button
           onClick={toggleDarkMode}
           className={`px-4 py-2 font-semibold rounded transition ${
-            darkMode ? 'text-white bg-gray-700 hover:bg-gray-600' : 'text-indigo-700 bg-gray-200 hover:bg-gray-300'
+            darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-indigo-700 hover:bg-gray-300'
           }`}
         >
           {darkMode ? 'Light Mode' : 'Dark Mode'}
@@ -224,20 +130,14 @@ export default function AIPage() {
       {/* Chatbot UI */}
       <div
         className={`max-w-3xl mx-auto p-8 shadow-lg rounded-xl backdrop-blur-sm bg-opacity-90 ${
-          darkMode ? 'text-white bg-gray-900' : 'text-black bg-white'
+          darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'
         }`}
       >
-        <h1 className="flex justify-center items-center mb-6 text-3xl font-bold text-center">
-          <span className="mr-3 animate-bounce">🤖</span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-            AI Assistant
-          </span>
-          <span className="ml-3 animate-pulse">✨</span>
-        </h1>
+        <h1 className="mb-6 text-3xl font-bold text-center">🤖 AI Assistant</h1>
 
         <div
           className={`p-3 mb-6 font-semibold rounded ${
-            darkMode ? 'text-white bg-indigo-800' : 'text-indigo-900 bg-indigo-200'
+            darkMode ? 'bg-indigo-800 text-white' : 'bg-indigo-200 text-indigo-900'
           }`}
         >
           Tokens Used: {tokenUsage !== null ? tokenUsage : '...'} / {FREE_TOKEN_LIMIT}
@@ -251,25 +151,22 @@ export default function AIPage() {
           </label>
           <div className="flex flex-wrap gap-4">
             {[
-              { type: 'blog_post', label: '📝 Blog Post', emoji: '📝' },
-              { type: 'email_draft', label: '📧 Email Draft', emoji: '📧' },
-              { type: 'image', label: '🖼️ Image', emoji: '🖼️' },
+              { type: 'blog_post', label: '📝 Blog Post' },
+              { type: 'email_draft', label: '📧 Email Draft' },
+              { type: 'image', label: '🖼️ Image' },
             ].map((option) => (
               <button
                 key={option.type}
                 onClick={() => handleTemplateTypeChange(option.type as any)}
-                className={`rounded-xl border px-5 py-3 shadow-md transition-all duration-300 transform hover:scale-105 ${
+                className={`rounded-xl border px-5 py-3 shadow-md transition duration-300 ${
                   templateType === option.type
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white ring-2 ring-indigo-300 ring-offset-2 shadow-lg'
+                    ? 'bg-indigo-600 text-white ring-2 ring-indigo-300 ring-offset-2'
                     : darkMode
-                      ? 'bg-gray-700 text-white hover:bg-gray-600 hover:shadow-lg'
-                      : 'bg-white text-gray-800 hover:bg-indigo-100 hover:shadow-lg'
+                      ? 'bg-gray-700 text-white hover:bg-gray-600'
+                      : 'bg-white text-gray-800 hover:bg-indigo-100'
                 }`}
               >
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">{option.emoji}</span>
-                  <span>{option.label.replace(option.emoji, '').trim()}</span>
-                </div>
+                {option.label}
               </button>
             ))}
           </div>
@@ -283,8 +180,8 @@ export default function AIPage() {
           <textarea
             className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-300 ${
               darkMode
-                ? 'placeholder-gray-400 text-white bg-gray-700 border-gray-600 focus:ring-indigo-500'
-                : 'placeholder-gray-500 text-black bg-white border-gray-300 focus:ring-indigo-300'
+                ? 'bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:ring-indigo-500'
+                : 'bg-white text-black border-gray-300 placeholder-gray-500 focus:ring-indigo-300'
             }`}
             rows={4}
             value={details}
@@ -296,88 +193,56 @@ export default function AIPage() {
 
         <button
           onClick={handleGenerate}
-          disabled={loading || overLimit || !details.trim()}
-          className={`px-6 py-3 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-            loading || overLimit || !details.trim()
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:ring-indigo-500 shadow-lg'
-          }`}
+          className="px-6 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700"
+          disabled={loading || overLimit}
         >
-          {loading ? <LoadingSpinner /> : 'Generate Content'}
+          {loading ? 'Generating...' : 'Generate'}
         </button>
 
-        {/* Progress Bar */}
-        {loading && generationProgress > 0 && (
-          <div className="p-4 mt-4 bg-gray-100 rounded-lg border">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-700">Generating content...</span>
-              <span className="text-sm font-medium text-indigo-600">{generationProgress}%</span>
-            </div>
-            <ProgressBar progress={generationProgress} />
-          </div>
-        )}
-
         {/* Output Section */}
-        {showOutput && output && (
-          <div className="mt-8 animate-fade-in">
-            <h2 className="flex items-center mb-4 text-xl font-semibold text-indigo-300">
-              <span className="mr-2">✨</span>
-              Generated Output:
-            </h2>
+        {output && (
+          <div className="mt-8">
+            <h2 className="mb-4 text-xl font-semibold text-indigo-300">Generated Output:</h2>
             {templateType === 'image' ? (
               <>
-                <div className="overflow-hidden mb-4 rounded-lg border shadow-lg">
-                  <img
-                    src={output}
-                    alt="Generated"
-                    className="w-full max-h-[400px] object-contain transition-transform duration-300 hover:scale-105"
-                  />
-                </div>
-                <div className="flex gap-4">
-                  <button
-                    onClick={downloadImage}
-                    className="px-4 py-2 text-white bg-green-600 rounded-lg shadow-md transition-all duration-200 transform hover:bg-green-700 hover:scale-105"
-                  >
-                    📥 Download Image
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className="px-4 py-2 text-white bg-indigo-600 rounded-lg shadow-md transition-all duration-200 transform hover:bg-indigo-700 hover:scale-105"
-                    disabled={saveLoading || overLimit}
-                  >
-                    {saveLoading ? '💾 Saving...' : '💾 Save Output'}
-                  </button>
-                </div>
+                <img
+                  src={output}
+                  alt="Generated"
+                  className="mb-4 max-h-[400px] w-full rounded border object-contain"
+                />
+                <button
+                  onClick={downloadImage}
+                  className="px-4 py-2 mr-4 text-white transition duration-200 bg-green-600 rounded hover:bg-green-700"
+                >
+                  Download Image
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700"
+                  disabled={saveLoading || overLimit}
+                >
+                  {saveLoading ? 'Saving...' : 'Save Output'}
+                </button>
               </>
             ) : (
               <>
                 <div
-                  className={`p-6 mb-4 text-sm leading-relaxed border rounded-lg shadow-lg transition-all duration-300 ${
-                    darkMode 
-                      ? 'text-white bg-gray-800 border-gray-600' 
-                      : 'text-black bg-gray-50 border-gray-200'
+                  className={`p-4 mb-4 text-sm leading-relaxed whitespace-pre-wrap border rounded ${
+                    darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-black'
                   }`}
                 >
-                  <TypingEffect 
-                    text={output} 
-                    speed={1}
-                    className={`${darkMode ? 'text-white' : 'text-black'}`}
-                  />
+                  {output}
                 </div>
                 <button
                   onClick={handleSave}
-                  className="px-4 py-2 text-white bg-indigo-600 rounded-lg shadow-md transition-all duration-200 transform hover:bg-indigo-700 hover:scale-105"
+                  className="px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700"
                   disabled={saveLoading || overLimit}
                 >
-                  {saveLoading ? '💾 Saving...' : '💾 Save Output'}
+                  {saveLoading ? 'Saving...' : 'Save Output'}
                 </button>
               </>
             )}
-            {saveMessage && (
-              <div className="p-3 mt-3 text-green-700 bg-green-100 rounded-lg border border-green-400 animate-fade-in">
-                {saveMessage}
-              </div>
-            )}
+            {saveMessage && <p className="mt-2 text-sm text-green-400">{saveMessage}</p>}
           </div>
         )}
       </div>

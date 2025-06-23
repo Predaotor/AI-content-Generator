@@ -6,7 +6,5 @@ export const AppConfig = {
   locale: 'en',
 
   // Backend API base URL
-  // Set NEXT_PUBLIC_API_URL in Railway environment variables
-  // Example: https://your-backend-app.railway.app
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'https://backend-ai-production-f1fa.up.railway.app/',
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
 };
