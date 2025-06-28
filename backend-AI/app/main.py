@@ -1,12 +1,12 @@
 # import necessary modules 
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session 
-from database import init_db
+from app.database import init_db
 from fastapi.security import OAuth2PasswordBearer
 import models
-from utils import auth 
+from app.utils import auth 
 from fastapi.middleware.cors import CORSMiddleware
-from routes import auth_routes, generate_routes, save_routes
+from app.routes import auth_routes, generate_routes, save_routes
 
 
 
@@ -28,6 +28,10 @@ origins=[
         "http://127.0.0.1:3000",
         "http://localhost:80",   # Nginx proxy
         "http://localhost:443",  # Nginx SSL proxy
+        "https://*.vercel.app",  # Vercel domains
+        "https://*.railway.app", # Railway domains
+        "https://*.netlify.app", # Netlify domains
+        "https://*.render.com",  # Render domains
          ]
 
 

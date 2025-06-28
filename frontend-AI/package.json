@@ -11,7 +11,7 @@
     "lint": "next lint",
     "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
     "check-types": "tsc --noEmit --pretty",
-    "prepare": "husky install"
+    "prepare": "node -e \"if (require('fs').existsSync('.git')) { require('child_process').execSync('husky install', {stdio: 'inherit'}) } else { console.log('Skipping husky install (not a git repository)') }\""
   },
   "dependencies": {
     "classnames": "^2.5.1",

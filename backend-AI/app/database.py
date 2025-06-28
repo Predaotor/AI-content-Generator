@@ -1,7 +1,7 @@
 # backend app database 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-from models import User, SavedOutput, UserToken  # Fixed import path
+from app.models import User, SavedOutput, UserToken  # Fixed import path
 
 import os 
 from dotenv import load_dotenv
