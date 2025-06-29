@@ -1,13 +1,14 @@
 # import necessary modules 
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session 
-from app.database import init_db
+from database import init_db
 from fastapi.security import OAuth2PasswordBearer
 import models
-from app.utils import auth 
+from utils import auth 
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import auth_routes, generate_routes, save_routes
-
+from routes import auth_routes, generate_routes, save_routes 
+from dotenv import load_dotenv
+import os
 
 
 app=FastAPI(
@@ -19,20 +20,16 @@ app=FastAPI(
 # Initialize DB tables 
 init_db()
 
-
+load_dotenv()
 
 
 # Allow frontend (e.g, running on http://localhost:3000)
-origins=[ 
-        "http://localhost:3000", # REACT/Next.js dev server 
-        "http://127.0.0.1:3000",
-        "http://localhost:80",   # Nginx proxy
-        "http://localhost:443",  # Nginx SSL proxy
-        "https://*.vercel.app",  # Vercel domains
-        "https://*.railway.app", # Railway domains
-        "https://*.netlify.app", # Netlify domains
-        "https://*.render.com",  # Render domains
-         ]
+origins = [
+    "https://ai-content-generator-blush.vercel.app",
+    "https://ai-content-generator.vercel.app",  # Main custom domain
+    os.getenv("FRONTEND_URL")
+    
+]
 
 
 #apply CORS settings 
