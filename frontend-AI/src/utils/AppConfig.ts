@@ -8,3 +8,6 @@ export const AppConfig = {
   // Backend API base URL
   apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
 };
+
+// Debug: Log the API URL being used
+console.log('🔗 API URL:', process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000');

@@ -25,10 +25,14 @@ load_dotenv()
 
 # Allow frontend (e.g, running on http://localhost:3000)
 origins = [
-    "https://ai-content-generator-blush.vercel.app",
-    "https://ai-content-generator.vercel.app",  # Main custom domain
-    os.getenv("FRONTEND_URL")
-    
+    "http://localhost:3000",  # Local development
+    "http://127.0.0.1:3000",  # Local development
+    "https://ai-content-generator-blush.vercel.app",  # Main Vercel domain
+    "https://ai-content-generator-git-remote-lados-projects-c1011f3e.vercel.app",  # Git remote
+    "https://ai-content-generator-ympfzhuwp-lados-projects-c1011f3e.vercel.app",  # Preview
+    "https://ai-content-generator.vercel.app",  # Custom domain
+    os.getenv("FRONTEND_URL", "") # From environment variable
+
 ]
 
 

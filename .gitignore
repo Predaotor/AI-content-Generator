@@ -28,7 +28,7 @@ frontend-AI/yarn-debug.log*
 frontend-AI/yarn-error.log*
 
 # dotenv local files
-frontend-AI/.env*.local
+frontend-AI/.env.local
 
 # local folder
 frontend-AI/local
