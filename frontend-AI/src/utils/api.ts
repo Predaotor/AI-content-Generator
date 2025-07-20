@@ -92,6 +92,10 @@ export async function fetchProfileData(token?: string) {
   return data;
 }
 
+
+
+
+
 // SaveOutputRequest interface defines the expected structure for saving generated content.
 // - template_type: Specifies the type of content ("blog_post", "email_draft", or "image").
 // - content: The actual content to be saved.
@@ -129,4 +133,20 @@ export async function saveOutput(
 
   // On success, return the parsed JSON response.
   return res.json();
+}
+
+// Google authentication 
+export async function googleAuth(idToken: string) {
+  const res = await fetch(`${AppConfig.apiUrl}/auth/google`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id_token: idToken }),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.detail || 'Google authentication failed');
+  }
+  const data = await res.json();
+  localStorage.setItem('access_token', data.token);
+  return data;
 }

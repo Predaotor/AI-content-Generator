@@ -13,3 +13,6 @@ PyJWT
 bcrypt
 langchain
 langchain-openai
+
+# For Google OAuth verification
+google-auth

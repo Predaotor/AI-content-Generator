@@ -26,6 +26,7 @@ Recording tools: OBS Studio, Railway dashboard, browser console, and Postman/Dev
 🤖 **AI Content Generation**: Generate blog posts, email drafts, and marketing content with OpenAI
 🎨 **Image Generation**: Sophisticated image outputs via DALL-E 3 integration
 💬 **User Authentication**: Secure JWT-based authentication with user profiles
+🔐 **Google OAuth**: One-click sign-in/sign-up with Google accounts
 🛡️ **Usage Tracking**: Monitor and limit user usage with persistent storage
 🧠 **Output Management**: Save and retrieve generated content with metadata
 🔐 **Secure Backend API**: Built with FastAPI with request rate limiting and CORS
@@ -49,6 +50,7 @@ Recording tools: OBS Studio, Railway dashboard, browser console, and Postman/Dev
 
 ✅ **Core functionality complete**
 ✅ **User authentication working**
+✅ **Google OAuth authentication implemented**
 ✅ **AI content generation implemented**
 ✅ **Image generation with DALL-E 3**
 ✅ **Railway database integration**
@@ -97,10 +99,38 @@ JWT_SECRET_KEY=your_jwt_secret
 # OpenAI
 OPENAI_API_KEY=your_openai_api_key
 
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_oauth_client_id
+
 # App Config
 ENVIRONMENT=development
 DEBUG=true
 ```
+
+### Google OAuth Setup
+
+1. **Create Google Cloud Project**:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select existing one
+   - Enable Google+ API
+
+2. **Create OAuth 2.0 Credentials**:
+   - Go to APIs & Services > Credentials
+   - Create OAuth 2.0 Client ID (Web application)
+   - Add authorized JavaScript origins:
+     - `http://localhost:3000` (for development)
+     - `https://your-domain.com` (for production)
+   - Copy the Client ID
+
+3. **Set Environment Variables**:
+   - Backend: Set `GOOGLE_CLIENT_ID` in your backend `.env`
+   - Frontend: Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` in your frontend `.env.local`
+
+4. **Test Google Sign-In**:
+   - Users can now sign in/sign up with their Google accounts
+   - Automatic user creation with unique usernames
+   - Seamless integration with existing JWT authentication
 
 ## 🚀 Deployment
 
@@ -150,6 +180,7 @@ AI-content-Generator/
 ### Authentication
 - `POST /auth/register` - User registration
 - `POST /auth/login` - User login
+- `POST /auth/google` - Google OAuth authentication
 - `GET /auth/profile` - Get user profile
 
 ### Content Generation
@@ -163,6 +194,7 @@ AI-content-Generator/
 ## 🛡️ Security Features
 
 - **JWT Authentication**: Secure token-based auth
+- **Google OAuth**: Secure third-party authentication
 - **Password Hashing**: bcrypt for password security
 - **Rate Limiting**: API request throttling
 - **CORS Protection**: Cross-origin request security
@@ -175,7 +207,7 @@ AI-content-Generator/
 - `id`: Primary key
 - `username`: Unique username
 - `email`: Unique email
-- `hashed_password`: Bcrypt hashed password
+- `hashed_password`: Bcrypt hashed password (nullable for OAuth users)
 - `created_at`: Account creation timestamp
 
 ### Saved Outputs Table
@@ -228,6 +260,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Railway** for managed PostgreSQL
 - **Next.js** team for the amazing framework
 - **FastAPI** team for the high-performance backend framework
+- **Google** for OAuth authentication services
 
 ## 📞 Support
 
@@ -240,5 +273,3 @@ For deployment issues:
 ---
 
 **Ready to generate amazing content?** Deploy this application and start creating with AI! 🚀
-
-

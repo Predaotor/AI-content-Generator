@@ -3,7 +3,7 @@ from models import User
 
 
 # Create user function
-def create_user(db: Session, email: str,username: str, password: str):
+def create_user(db: Session, email: str, username: str, password: str = None, picture: str = None):
     db_user = User(email=email, username=username, hashed_password=password)
     db.add(db_user)
     db.commit()
