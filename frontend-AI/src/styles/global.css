@@ -3,6 +3,89 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Prevent zoom on output containers */
+.output-container {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  /* Prevent layout shifts during animations */
+  transform: none !important;
+  transition: none !important;
+  min-height: 200px;
+}
+
+/* Prevent cursor from causing layout shifts */
+.animate-typing-cursor {
+  transition: opacity 0.2s ease !important;
+  transform: none !important;
+}
+
+/* Prevent any scale/transform animations on main containers */
+.chat-container, .main-container, .output-container {
+  transform: none !important;
+  transition: opacity 0.2s ease !important;
+}
+
+/* Remove all hover transforms from buttons and interactive elements */
+button, .btn, .button {
+  transform: none !important;
+  transition: color 0.2s ease, background-color 0.2s ease !important;
+}
+
+/* Ensure no layout shifts during animations */
+* {
+  transform-style: flat !important;
+  backface-visibility: hidden;
+}
+
+/* Remove will-change from global scope and output-container */
+/* .output-container {
+  will-change: opacity;
+} */
+
+/* Prevent global zoom effects */
+html, body, #__next {
+  transform: none !important;
+  transition: opacity 0.2s ease !important;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Prevent scroll jumps during re-renders */
+.output-container {
+  scroll-behavior: auto;
+  overflow-anchor: none;
+}
+
+/* Prevent backdrop-filter zoom effects */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px) !important;
+  transform: none !important;
+}
+
+/* Prevent zoom on text areas and inputs */
+textarea, input {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  font-size: 16px !important; /* iOS fix - prevents auto-zoom */
+}
+
+/* Ensure proper mobile scaling */
+@media (max-width: 768px) {
+  .output-container {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  textarea, input {
+    font-size: 16px;
+  }
+}
+
 @tailwind base;
 
 @tailwind components;
