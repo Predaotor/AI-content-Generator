@@ -3,37 +3,25 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session 
 from database import init_db
 from fastapi.security import OAuth2PasswordBearer
-import models
+import  models
 from utils import auth 
 from fastapi.middleware.cors import CORSMiddleware
-from routes import auth_routes, generate_routes, save_routes 
-from dotenv import load_dotenv
-import os
+from routes import auth_routes, generate_routes, save_routes
 
 
-app=FastAPI(
-    title="AI Content Generator API",
-    description="A FastAPI backend for AI-powered content generation",
-    version="1.0.0"
-) 
+
+app=FastAPI() 
 
 # Initialize DB tables 
 init_db()
 
-load_dotenv()
 
 
 # Allow frontend (e.g, running on http://localhost:3000)
-origins = [
-    "http://localhost:3000",  # Local development
-    "http://127.0.0.1:3000",  # Local development
-    "https://ai-content-generator-blush.vercel.app",  # Main Vercel domain
-    "https://ai-content-generator-git-remote-lados-projects-c1011f3e.vercel.app",  # Git remote
-    "https://ai-content-generator-ympfzhuwp-lados-projects-c1011f3e.vercel.app",  # Preview
-    "https://ai-content-generator.vercel.app",  # Custom domain
-    os.getenv("FRONTEND_URL", "") # From environment variable
-
-]
+origins=[ 
+        "http://localhost:3000", # REACT/Next.js dev server 
+        "http://127.0.0.1:3000",
+         ]
 
 
 #apply CORS settings 
@@ -53,20 +41,6 @@ app.include_router(save_routes.router, prefix="/save")
 # OAuth2PasswordBearer is used to extract the token from requests
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-
-@app.get("/")
-async def root():
-    """Root endpoint with API information"""
-    return {
-        "message": "AI Content Generator API",
-        "version": "1.0.0",
-        "status": "running"
-    }
-
-@app.get("/health")
-async def health_check():
-    """Health check endpoint for Docker and monitoring"""
-    return {"status": "healthy", "service": "ai-content-generator-api"}
 
 @app.get("/protected")
 async def  protected_route(token: str=Depends(oauth2_scheme)):

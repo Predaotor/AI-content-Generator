@@ -53,5 +53,13 @@ class TemplateResponse(BaseModel):
 class ImageResponse(BaseModel):
     image_url: str  # URL of the generated image
     
+class AdjustmentRequest(BaseModel):
+    original_content: str
+    adjustments: str
+    template_type: str
+
+class AdjustmentResponse(BaseModel):
+    adjusted_content: str
+
 class ImageRequest(BaseModel):
     prompt: str

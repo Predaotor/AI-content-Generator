@@ -41,6 +41,34 @@ module.exports = {
       lineHeight: {
         hero: '4.5rem',
       },
+      animation: {
+        'text-reveal': 'textReveal 0.5s ease-out',
+        'typing-cursor': 'typingCursor 1s infinite',
+        'smooth-fade': 'smoothFade 0.3s ease-in-out',
+        'line-appear': 'lineAppear 0.2s ease-out',
+      },
+      keyframes: {
+        textReveal: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        typingCursor: {
+          '0%, 50%': { opacity: '1' },
+          '51%, 100%': { opacity: '0' },
+        },
+        smoothFade: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        lineAppear: {
+          '0%': { opacity: '0', transform: 'translateX(-10px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+      },
+      fontFamily: {
+        'smooth': ['Inter', 'system-ui', 'sans-serif'],
+        'mono-smooth': ['JetBrains Mono', 'Fira Code', 'monospace'],
+      },
     },
   },
   plugins: [],

@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
 import type { SaveOutputRequest } from '../utils/api';
-import { fetchAIResponse, fetchProfileData, saveOutput } from '../utils/api';
+import { fetchAIResponse, fetchProfileData, saveOutput, adjustContent } from '../utils/api';
+import LoadingSpinner from '../components/LoadingSpinner';
+import TypingAnimation from '../components/TypingAnimation';
+import AdjustableOutput from '../components/AdjustableOutput';
 
 const FREE_TOKEN_LIMIT = 1000;
 
@@ -19,6 +22,7 @@ export default function AIPage() {
   const [tokenUsage, setTokenUsage] = useState<number | null>(null);
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
+  const [showTypingAnimation, setShowTypingAnimation] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -39,9 +43,11 @@ export default function AIPage() {
     setLoading(true);
     setOutput('');
     setSaveMessage('');
+    setShowTypingAnimation(false);
     try {
       const result = await fetchAIResponse(templateType, details);
       setOutput(result);
+      setShowTypingAnimation(true);
       const token = localStorage.getItem('access_token');
       if (token) {
         fetchProfileData(token).then((profile) => {
@@ -53,6 +59,15 @@ export default function AIPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAdjustContent = async (adjustments: string): Promise<string> => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      throw new Error('You must be logged in to adjust content.');
+    }
+    console.log('handleAdjustContent called with:', { adjustments, templateType, outputLength: output.length });
+    return await adjustContent(output, adjustments, templateType, token);
   };
 
   const downloadImage = () => {
@@ -93,6 +108,7 @@ export default function AIPage() {
     setDetails('');
     setOutput('');
     setSaveMessage('');
+    setShowTypingAnimation(false);
   };
 
   const overLimit = tokenUsage !== null && tokenUsage >= FREE_TOKEN_LIMIT;
@@ -196,11 +212,19 @@ export default function AIPage() {
           className="px-6 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700"
           disabled={loading || overLimit}
         >
-          {loading ? 'Generating...' : 'Generate'}
+          {loading ? (
+            <LoadingSpinner 
+              message="Generating..." 
+              size="small" 
+              inline={true} 
+            />
+          ) : (
+            'Generate'
+          )}
         </button>
 
         {/* Output Section */}
-        {output && (
+        {output && !loading && (
           <div className="mt-8">
             <h2 className="mb-4 text-xl font-semibold text-indigo-300">Generated Output:</h2>
             {templateType === 'image' ? (
@@ -226,13 +250,27 @@ export default function AIPage() {
               </>
             ) : (
               <>
-                <div
-                  className={`p-4 mb-4 text-sm leading-relaxed whitespace-pre-wrap border rounded ${
-                    darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-black'
-                  }`}
-                >
-                  {output}
-                </div>
+                {showTypingAnimation ? (
+                  <div className="mb-4">
+                    <TypingAnimation 
+                      text={output} 
+                      speed={30}
+                      onComplete={() => setShowTypingAnimation(false)}
+                      className={`p-4 border rounded ${
+                        darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-black'
+                      }`}
+                    />
+                  </div>
+                ) : (
+                  <div className="mb-4">
+                    <AdjustableOutput
+                      initialContent={output}
+                      onRegenerate={handleAdjustContent}
+                      templateType={templateType}
+                      className={darkMode ? 'bg-gray-800 text-white' : ''}
+                    />
+                  </div>
+                )}
                 <button
                   onClick={handleSave}
                   className="px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700"

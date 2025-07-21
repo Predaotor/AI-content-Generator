@@ -135,6 +135,46 @@ export async function saveOutput(
   return res.json();
 }
 
+// Adjust content with user feedback
+export async function adjustContent(
+  originalContent: string,
+  adjustments: string,
+  templateType: string,
+  token: string
+): Promise<string> {
+  console.log('adjustContent API call:', {
+    url: `${AppConfig.apiUrl}/generate/adjust-content`,
+    originalContentLength: originalContent.length,
+    adjustments,
+    templateType
+  });
+
+  const res = await fetch(`${AppConfig.apiUrl}/generate/adjust-content`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      original_content: originalContent,
+      adjustments: adjustments,
+      template_type: templateType,
+    }),
+  });
+
+  console.log('adjustContent response status:', res.status);
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    console.error('adjustContent error response:', error);
+    throw new Error(error.detail || 'Failed to adjust content');
+  }
+
+  const data = await res.json();
+  console.log('adjustContent success response:', data);
+  return data.adjusted_content;
+}
+
 // Google authentication 
 export async function googleAuth(idToken: string) {
   const res = await fetch(`${AppConfig.apiUrl}/auth/google`, {
