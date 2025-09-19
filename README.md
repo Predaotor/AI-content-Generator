@@ -12,9 +12,9 @@ This is **a fully custom-built application**, designed and developed from scratc
 
 ---
 
-## 📽️ Demo Recording (Coming Soon)
+## 📽️ Demo Recording 
 
-A recorded walkthrough will soon be available where I:
+A recorded walkthrough :
 
 - Showcase AI agents in action (e.g. research tasks, creative writing, planning)
 - Walk through image generation (prompt to result, including sophisticated scenes)
