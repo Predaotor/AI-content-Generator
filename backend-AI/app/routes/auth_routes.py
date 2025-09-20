@@ -2,14 +2,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 import os 
+from app import crud, database
 from dotenv import load_dotenv
-import schemas, crud
-from utils.auth import get_password_hash, create_access_token, verify_password
-from database import get_db
-from utils import auth 
+from app.schemas import UserCreate, UserLogin
+from app.utils.auth import get_password_hash, create_access_token, verify_password
+from app.database import get_db
+from app.utils import auth 
 from datetime import timedelta, date 
-from dependencies import get_current_user
-from models import User, UserToken, SavedOutput
+from app.dependencies import get_current_user
+from app.models import User, UserToken, SavedOutput
 from google.oauth2 import id_token as google_id_token
 from google.auth.transport import requests as google_requests
 import json
@@ -23,7 +24,7 @@ router = APIRouter()
 
 # Create api route for user registration 
 @router.post("/register")
-async def register(user: schemas.UserCreate, db: Session = Depends(auth.get_db)):
+async def register(user: UserCreate, db: Session = Depends(auth.get_db)):
     # Check if the email already exists 
     db_user = crud.get_user_by_email(db, email=user.email)
     
@@ -48,7 +49,7 @@ async def register(user: schemas.UserCreate, db: Session = Depends(auth.get_db))
 # api to handle user login 
 
 @router.post("/login")
-async def login(user: schemas.UserLogin, db: Session = Depends(auth.get_db)):
+async def login(user: UserLogin, db: Session = Depends(auth.get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
 
     if not db_user:

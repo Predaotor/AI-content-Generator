@@ -226,7 +226,7 @@ export default function AIPage() {
           overflow: 'auto'
         }}
       >
-        <h1 className="mb-6 text-3xl font-bold text-center">🤖 AI Assistant</h1>
+        <h1 className="mb-6 text-3xl font-bold text-center">🧠 ADHD Assistant</h1>
 
         <div
           className={`p-3 mb-6 font-semibold rounded ${
@@ -240,12 +240,12 @@ export default function AIPage() {
         {/* Template Selector */}
         <div className="mb-6">
           <label className={`block mb-3 text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-            Select Template Type:
+            Select ADHD Tool:
           </label>
           <div className="flex flex-wrap gap-4">
             {[
-              { type: 'blog_post', label: '📝 Blog Post' },
-              { type: 'email_draft', label: '📧 Email Draft' },
+              { type: 'blog_post', label: '✅ Task' },
+              { type: 'email_draft', label: '📋 Plan' },
               { type: 'image', label: '🖼️ Image' },
             ].map((option) => (
               <button

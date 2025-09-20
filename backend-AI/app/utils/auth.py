@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from fastapi import HTTPException, Depends, status 
 from sqlalchemy.orm import Session 
 from passlib.context import CryptContext 
-import crud, models, database
+from  app import crud, database
 import os 
 from dotenv import load_dotenv
 from jwt import PyJWTError

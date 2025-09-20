@@ -1,12 +1,12 @@
 # import necessary modules 
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session 
-from database import init_db
+from app.database import init_db
 from fastapi.security import OAuth2PasswordBearer
-import  models
-from utils import auth 
+import  app.models
+from app.utils import auth 
 from fastapi.middleware.cors import CORSMiddleware
-from routes import auth_routes, generate_routes, save_routes
+from app.routes import auth_routes, generate_routes, save_routes
 
 
 

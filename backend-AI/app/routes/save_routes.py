@@ -1,14 +1,14 @@
 from fastapi import Depends, HTTPException, APIRouter
-from models import User, SavedOutput
+from app.models import User, SavedOutput
 from sqlalchemy.orm import Session
-from database import get_db
-from models import UserToken
-from schemas import SavedOutputSchema, SaveOutputRequest
+from app.database import get_db
+from app.models import UserToken
+from app.schemas import SavedOutputSchema, SaveOutputRequest
 from fastapi.security import OAuth2PasswordBearer
 import os
 from datetime import date, datetime
 from dotenv import load_dotenv
-from dependencies import get_current_user
+from app.dependencies import get_current_user
 
 router = APIRouter()
 

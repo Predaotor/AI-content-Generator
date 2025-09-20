@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends
-from schemas import TemplateRequest, TemplateResponse, ImageResponse, ImageRequest
-from schemas import AdjustmentRequest, AdjustmentResponse
-from utils.openai_api import generate_text_template, generate_image_template
+from app.schemas import TemplateRequest, TemplateResponse, ImageResponse, ImageRequest
+from app.schemas import AdjustmentRequest, AdjustmentResponse
+from app.utils.openai_api import generate_text_template, generate_image_template
 from datetime import date 
-from models import UserToken, User
+from app.models import UserToken, User
 from sqlalchemy.orm import Session
-from dependencies import  get_current_user
-from database import get_db
+from app.dependencies import  get_current_user
+from app.database import get_db
 
 router = APIRouter()
 
